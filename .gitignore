@@ -100,3 +100,8 @@ ragtest/
 # uv
 .python-version
 # Note: uv.lock should typically be committed for reproducible builds
+
+# env for AI
+.claude/settings.local.json
+.mcp.json
+!.mcp.json.example
