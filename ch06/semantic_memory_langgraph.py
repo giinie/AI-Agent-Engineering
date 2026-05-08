@@ -29,6 +29,8 @@ def call_model(state: MessagesState):
     return {"messages": response}
 
 
+# vectordb2 is only installed on non-Windows platforms (see pyproject.toml).
+# Run this example inside WSL/Linux/macOS.
 from vectordb import Memory
 
 memory = Memory(chunking_strategy={'mode':'sliding_window', 'window_size': 128, 'overlap': 16})
