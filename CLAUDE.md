@@ -23,7 +23,7 @@ Inherits skill routing from `@~/.claude/SKILL_ROUTING.md` and MCP catalog from `
 - **New business logic**: The existing integration/unit test suite is solid — prefer `superpowers:test-driven-development` to write tests first.
 - **Code review**: Use `ai-review` (multi-model) or `pr-review-toolkit:review-pr`. For delegated review tasks, prefer the `oh-my-claudecode:code-reviewer` agent.
 - **Code review constraint**: Do NOT use `superpowers:requesting-code-review` / `superpowers:receiving-code-review` outside a superpowers workflow context (aligned with `~/.claude/SKILL_ROUTING.md`).
-- **Doc sync**: When code changes affect API endpoints, environment variables, the Architecture section, or any "WHY" annotation in Key Patterns, run `sync-docs:sync-docs` to update this CLAUDE.md and `docs/architecture.md`.
+- **Doc sync**: When code changes affect API endpoints, environment variables, the Architecture section, or any "WHY" annotation in Key Patterns, run `sync-docs:sync-docs` to update this CLAUDE.md and `docs/architecture.md`. Additionally, audit the **Project-Specific Gotchas** section after edits to `pyproject.toml`, `pytest.ini`, `.mcp.json`, `conftest.py`, or `src/__init__.py` — those files contain the current-state facts the Gotchas section quotes, and silent drift between them caused commit `060ccd0`'s gotcha staleness.
 
 ## Mandatory Reading
 
@@ -130,8 +130,8 @@ The repo has BOTH `pytest.ini` (only `filterwarnings`) and `[tool.pytest.ini_opt
 - Workaround for normal runs: `uv run pytest tests/ -q` (explicit path) or merge the pyproject `[tool.pytest.ini_options]` keys into `pytest.ini`.
 - Don't "fix" by deleting `pytest.ini` — its `filterwarnings` setting is intentional.
 
-### `tool.uv.dev-dependencies` is deprecated
-`pyproject.toml` uses `[tool.uv] dev-dependencies = [...]`, which uv now warns about: prefer `[dependency-groups] dev = [...]`. Migrate only if explicitly asked; the duplicated `[project.optional-dependencies] dev` block already covers `pip install -e .[dev]` callers.
+### Duplicate dev dependency declarations
+`pyproject.toml` declares dev dependencies in **both** `[project.optional-dependencies] dev` (PEP 631, for `pip install -e .[dev]` callers) and `[dependency-groups] dev` (PEP 735, uv-canonical). Content is identical and must be kept in sync manually when adding/removing dev tools — `uv add --dev <pkg>` only updates the `[dependency-groups]` block. Migration from the legacy `[tool.uv].dev-dependencies` form was completed in commit `060ccd0`; don't reintroduce that section.
 
 ### Two MCP server copies
 `ch04/mcp_servers/{MCP_math_server,MCP_weather_server}.py` and `src/common/mcp/MCP_{math,weather}_server.py` are separate files. Edits in one are not reflected in the other. Confirm which copy a fix should target.
