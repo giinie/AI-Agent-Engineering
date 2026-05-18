@@ -146,7 +146,7 @@ The repo has BOTH `pytest.ini` (only `filterwarnings`) and `[tool.pytest.ini_opt
 `loki_logger.py` and `instrument_tempo.py` no-op gracefully if `LOKI_ENDPOINT` / `TEMPO_ENDPOINT` are unreachable, but errors may surface in logs. Either start the docker-compose stack or stub these calls when running examples standalone.
 
 ### `.mcp.json` registers a JetBrains SSE bridge
-The committed `.mcp.json` points at `http://127.0.0.1:64343/sse` (JetBrains IDE plugin). It is gitignored upstream (`.mcp.json` in `.gitignore`) but the actual file is staged. Don't add secrets here; use `.mcp.json.example` for templates.
+The committed `.mcp.json` points at the JetBrains IDE plugin's local SSE endpoint (`http://127.0.0.1:<dynamic-port>/sse`). The port is assigned by the JetBrains plugin at IDE startup and changes between sessions — do **not** treat the exact port as a current-state fact. Verify with `cat .mcp.json` if the value matters. The file is gitignored upstream (`.mcp.json` in `.gitignore`) but the actual file is staged. Don't add secrets here; use `.mcp.json.example` for templates.
 
 ## References
 
