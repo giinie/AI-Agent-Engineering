@@ -26,7 +26,7 @@
 - Do NOT spawn subagents for simple sequential tasks; keep the main context clean instead
 - Prefer 2–3 targeted subagents over large swarms — you cannot effectively observe 10+ agents
 - **Targeted search → direct tools first**: For known file paths, specific patterns, or directory exploration, use Glob/Grep/Read directly. Explore subagents are for broad, open-ended codebase questions only.
-- **Subagent gate failure**: Explore agents may return empty results due to plugin skill gate conflicts (superpowers SUBAGENT-STOP vs EXTREMELY-IMPORTANT). If an agent returns gate-check output instead of actual results, switch to direct tools immediately — do not retry the same agent.
+- **Subagent gate failure**: Explore agents may return empty results due to plugin skill gate conflicts (e.g., a hook printing `SUBAGENT-STOP` or `EXTREMELY-IMPORTANT` markers in place of search results). If an agent returns gate-check output instead of actual results, switch to direct tools immediately — do not retry the same agent. (The original `superpowers` plugin that produced this exact pattern is no longer installed at user scope, but the same anti-pattern can recur with any future gate plugin.)
 - **Esc+Esc interrupt vs permission denial**: When a user interrupts a running Agent with Esc double-tap, Claude Code reports `"The user doesn't want to proceed"` — identical to a permission denial. Do not assume a hook or permission system blocked the call. Agent tool calls are auto-approved and do not show approval prompts.
 
 ## Task Execution
@@ -64,7 +64,7 @@
 > Inherits `~/.claude/CODE_QUALITY.md` (Simplicity First + Surgical Changes).
 > This section adds project-specific deltas only — do not restate user-scope rules.
 
-**Priority override**: `Correctness > Simplicity > Elegance > Speed` — inserts Correctness at the top. The remaining order stays compatible with the user-scope "Simplicity First" principle.
+**Priority** (matches user-scope `~/.claude/CODE_QUALITY.md`, restated for visibility since this drives every project decision): `Correctness > Simplicity > Elegance > Speed`.
 
 - No temporary fixes — find and address root causes
 - After a non-trivial change, ask once about **code just written in this session**:

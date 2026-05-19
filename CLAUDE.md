@@ -19,11 +19,10 @@ delegation defaults (including OMC delegation_rules).
 
 Inherits skill routing from `@~/.claude/SKILL_ROUTING.md` and MCP catalog from `@~/.claude/MCP_ROUTING.md`. Project-specific additions:
 
-- **Security-related changes** (auth / JWT / refresh token rotation / CORS / rate-limit): Review is MANDATORY via `superpowers:systematic-debugging` or the `oh-my-claudecode:security-reviewer` agent.
-- **New business logic**: The existing integration/unit test suite is solid — prefer `superpowers:test-driven-development` to write tests first.
+- **Security-related changes** (auth / JWT / refresh token rotation / CORS / rate-limit): Review is MANDATORY. Use `security-review` (built-in) for the change scan, or delegate to the `oh-my-claudecode:security-reviewer` agent. For systematic root-cause investigation of a security regression, use `oh-my-claudecode:debug` (per `~/.claude/SKILL_ROUTING.md` § Security).
+- **New business logic**: The existing integration/unit test suite is solid — write tests first manually, optionally delegating scaffolding to the `oh-my-claudecode:executor` agent. No TDD-specific skill is installed at user scope; see `~/.claude/SKILL_ROUTING.md` § Deprecated for the migration rationale.
 - **Code review**: Use `ai-review` (multi-model) or `pr-review-toolkit:review-pr`. For delegated review tasks, prefer the `oh-my-claudecode:code-reviewer` agent.
-- **Code review constraint**: Do NOT use `superpowers:requesting-code-review` / `superpowers:receiving-code-review` outside a superpowers workflow context (aligned with `~/.claude/SKILL_ROUTING.md`).
-- **Doc sync**: When code changes affect API endpoints, environment variables, the Architecture section, or any "WHY" annotation in Key Patterns, run `sync-docs:sync-docs` to update this CLAUDE.md and `docs/architecture.md`. Additionally, audit the **Project-Specific Gotchas** section after edits to `pyproject.toml`, `pytest.ini`, `.mcp.json`, `conftest.py`, or `src/__init__.py` — those files contain the current-state facts the Gotchas section quotes, and silent drift between them caused commit `060ccd0`'s gotcha staleness.
+- **Doc sync**: When code changes affect API endpoints, environment variables, the Architecture section, or any "WHY" annotation in Key Patterns, run `sync-docs:sync-docs` to update this CLAUDE.md. Additionally, audit the **Project-Specific Gotchas** section after edits to `pyproject.toml`, `pytest.ini`, `.mcp.json`, `conftest.py`, or `src/__init__.py` — those files contain the current-state facts the Gotchas section quotes, and silent drift between them caused commit `060ccd0`'s gotcha staleness.
 
 ## Mandatory Reading
 
@@ -146,7 +145,7 @@ The repo has BOTH `pytest.ini` (only `filterwarnings`) and `[tool.pytest.ini_opt
 `loki_logger.py` and `instrument_tempo.py` no-op gracefully if `LOKI_ENDPOINT` / `TEMPO_ENDPOINT` are unreachable, but errors may surface in logs. Either start the docker-compose stack or stub these calls when running examples standalone.
 
 ### `.mcp.json` registers a JetBrains SSE bridge
-The committed `.mcp.json` points at the JetBrains IDE plugin's local SSE endpoint (`http://127.0.0.1:<dynamic-port>/sse`). The port is assigned by the JetBrains plugin at IDE startup and changes between sessions — do **not** treat the exact port as a current-state fact. Verify with `cat .mcp.json` if the value matters. The file is gitignored upstream (`.mcp.json` in `.gitignore`) but the actual file is staged. Don't add secrets here; use `.mcp.json.example` for templates.
+The local `.mcp.json` points at the JetBrains IDE plugin's local SSE endpoint (`http://127.0.0.1:<dynamic-port>/sse`). The port is assigned by the JetBrains plugin at IDE startup and changes between sessions — do **not** treat the exact port as a current-state fact. Verify with `cat .mcp.json` if the value matters. The file is gitignored (`.mcp.json` in `.gitignore`) and **not tracked** — `git ls-files .mcp.json` returns nothing; the JetBrains plugin recreates it on demand. Don't add secrets here; use `.mcp.json.example` for templates.
 
 ## References
 
