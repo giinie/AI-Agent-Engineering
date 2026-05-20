@@ -16,7 +16,7 @@
 
 ## Subagent Usage
 
-> Overrides user-scope OMC `<delegation_rules>` (aggressive delegation). The mechanism is the user-scope `CLAUDE.md` "Precedence (Canonical)" section, which places project-scope rules at level 2 and OMC defaults at level 4 — so this file wins for delegation policy when active.
+> Overrides user-scope OMC `<delegation_rules>` (aggressive delegation). The mechanism is the user-scope `CLAUDE.md` § Instruction Precedence (Unified), which places project-scope rules at level 2 and OMC defaults at level 4 — so this file wins for delegation policy when active.
 
 - Spawn subagents **only when context isolation is explicitly needed**:
   - Parallel independent analysis (e.g., reviewing multiple modules simultaneously)
