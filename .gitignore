@@ -109,3 +109,4 @@ ragtest/
 # AI plugin local derectory
 .remember/
 .omc/
+.omx/
