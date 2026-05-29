@@ -22,7 +22,7 @@ Inherits skill routing from `@~/.claude/SKILL_ROUTING.md` and MCP catalog from `
 - **Security-related changes** (auth / JWT / refresh token rotation / CORS / rate-limit): Review is MANDATORY. Use `security-review` (built-in) for the change scan, or delegate to the `oh-my-claudecode:security-reviewer` agent. For systematic root-cause investigation of a security regression, use `oh-my-claudecode:debug` (per `~/.claude/SKILL_ROUTING_DETAIL.md` § Security).
 - **New business logic**: The existing integration/unit test suite is solid — write tests first manually, optionally delegating scaffolding to the `oh-my-claudecode:executor` agent. No TDD-specific skill is installed at user scope (see `~/.claude/SKILL_ROUTING_DETAIL.md` § Deprecated / Uninstalled — the `superpowers:test-driven-development` row documents the no-replacement fallback).
 - **Code review**: Use `ai-review` (multi-model) or `pr-review-toolkit:review-pr`. For delegated review tasks, prefer the `oh-my-claudecode:code-reviewer` agent.
-- **Doc sync**: When code changes affect API endpoints, environment variables, the Architecture section, or any "WHY" annotation in Key Patterns, run `sync-docs:sync-docs` to update this CLAUDE.md. Additionally, audit the **Project-Specific Gotchas** section after edits to `pyproject.toml`, `pytest.ini`, `.mcp.json`, `conftest.py`, or `src/__init__.py` — those files contain the current-state facts the Gotchas section quotes, and silent drift between them caused commit `060ccd0`'s gotcha staleness.
+- **Doc sync**: When code changes affect API endpoints, environment variables, the Architecture section, or any "WHY" annotation in Key Patterns, run `sync-docs:sync-docs` to update this CLAUDE.md. Additionally, audit the **Project-Specific Gotchas** section after edits to `pyproject.toml`, `pytest.ini`, `.mcp.json`, `conftest.py`, or `src/__init__.py` — those files contain the current-state facts the Gotchas section quotes, and silent drift between them caused commit `060ccd0`'s gotcha staleness. Also audit the path-scoped rules in `.claude/rules/` (fine-tuning, mcp-server-copies, observability) after edits under `ch07/`, `src/fine_tuning/`, `ch04/mcp_servers/`, `src/common/mcp/`, or `src/common/observability/`.
 
 ## Mandatory Reading
 
@@ -119,6 +119,8 @@ The two layouts overlap intentionally for pedagogical reasons. When asked to mod
 
 ## Project-Specific Gotchas
 
+> Path-scoped gotchas (fine-tuning, MCP server copies, observability) live in `.claude/rules/` — they auto-load when Claude reads files under their target paths (`ch07/**`, `src/fine_tuning/**`, `ch04/mcp_servers/**`, `src/common/mcp/**`, `src/common/observability/**`). The entries below are command/build-level (triggered by intent, not file reads) and stay eager here.
+
 ### Test import path is broken at the repo root (verified)
 Tests use bare `from common.evaluation.ai_judge import AIJudge` style, but `uv run pytest` from the repo root fails with `ModuleNotFoundError: No module named 'common'`. There is **no `conftest.py` at the repo root** to add `src/` to `sys.path`, and `pyproject.toml` configures hatchling with `packages = ["src"]` (which would install as `src.common.*`, not `common.*`).
 - The tests presumably worked when invoked from inside `src/` or via an IDE that injects sources roots (the `.idea/` config + JetBrains MCP bridge in `.mcp.json` suggests this).
@@ -132,17 +134,8 @@ The repo has BOTH `pytest.ini` (only `filterwarnings`) and `[tool.pytest.ini_opt
 ### Duplicate dev dependency declarations
 `pyproject.toml` declares dev dependencies in **both** `[project.optional-dependencies] dev` (PEP 631, for `pip install -e .[dev]` callers) and `[dependency-groups] dev` (PEP 735, uv-canonical). Content is identical and must be kept in sync manually when adding/removing dev tools — `uv add --dev <pkg>` only updates the `[dependency-groups]` block. Migration from the legacy `[tool.uv].dev-dependencies` form was completed in commit `060ccd0`; don't reintroduce that section.
 
-### Two MCP server copies
-`ch04/mcp_servers/{MCP_math_server,MCP_weather_server}.py` and `src/common/mcp/MCP_{math,weather}_server.py` are separate files. Edits in one are not reflected in the other. Confirm which copy a fix should target.
-
 ### `src/__init__.py` exists
 `src/` is a Python package, not a source root. Tests that already work via the bare-`common` style imply some sys.path manipulation is happening (likely IDE-level via `.idea/` for JetBrains, see `.mcp.json`). Headless `uv run pytest` may not replicate this.
-
-### Fine-tuning scripts are GPU-heavy
-`src/fine_tuning/*.py` and `ch07/test_*_model.py` require the `fine-tuning` optional extras and substantial VRAM. Don't run them by default during refactors; only when explicitly asked.
-
-### Observability is opt-in
-`loki_logger.py` and `instrument_tempo.py` no-op gracefully if `LOKI_ENDPOINT` / `TEMPO_ENDPOINT` are unreachable, but errors may surface in logs. Either start the docker-compose stack or stub these calls when running examples standalone.
 
 ### `.mcp.json` registers a JetBrains SSE bridge
 The local `.mcp.json` points at the JetBrains IDE plugin's local SSE endpoint (`http://127.0.0.1:<dynamic-port>/sse`). The port is assigned by the JetBrains plugin at IDE startup and changes between sessions — do **not** treat the exact port as a current-state fact. Verify with `cat .mcp.json` if the value matters. The file is gitignored (`.mcp.json` in `.gitignore`) and **not tracked** — `git ls-files .mcp.json` returns nothing; the JetBrains plugin recreates it on demand. Don't add secrets here; use `.mcp.json.example` for templates.
