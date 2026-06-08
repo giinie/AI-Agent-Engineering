@@ -13,7 +13,7 @@ AI 에이전트 엔지니어링의 실습 코드베이스입니다. 7개 이상�
 - **목적**: 프로젝트 메타데이터 및 의존성 관리
 - **주요 내용**:
   - 프로젝트 이름: `building-applications-with-ai-agents`
-  - Python 버전 요구사항: `>=3.13`
+  - Python 버전 요구사항: `>=3.12,<3.13`
   - 핵심 의존성: OpenAI, LangChain, LangGraph, LangChain Community 등
   - pytest 설정 및 테스트 경로 정의
   - uv 패키지 매니저 설정
@@ -603,7 +603,7 @@ AI 에이전트 엔지니어링의 실습 코드베이스입니다. 7개 이상�
 | 카테고리 | 기술 |
 |---------|------|
 | **프레임워크** | LangChain, LangGraph, Autogen, OpenAI |
-| **언어** | Python 3.13+ |
+| **언어** | Python 3.12 |
 | **패키지 관리** | uv |
 | **LLM** | OpenAI GPT-4, GPT-5 |
 | **분산 처리** | Ray, Redis Streams, Temporal |

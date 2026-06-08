@@ -142,7 +142,7 @@ The local `.mcp.json` points at the JetBrains IDE plugin's local SSE endpoint (`
 
 ## References
 
-- `project.md` — exhaustive file-by-file map (Korean). Use as a lookup table when locating functionality. Note: it claims Python 3.13+; the actual constraint is 3.12.
+- `project.md` — exhaustive file-by-file map (Korean). Use as a lookup table when locating functionality.
 - `src/common/evaluation/README_Evaluations.md` — evaluation framework usage.
 - Korean repo: https://github.com/TeeDDub/AI-Agent-Engineering
 - Original (English): https://github.com/michaelalbada/BuildingApplicationsWithAIAgents
