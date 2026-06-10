@@ -32,6 +32,7 @@ dependencies = [
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
+    "ruff>=0.15.16",
 ]
 fine-tuning = [
     "datasets>=2.14.0",
@@ -60,5 +61,6 @@ addopts = "-v --tb=short"
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
+    "ruff>=0.15.16",
 ]
 
