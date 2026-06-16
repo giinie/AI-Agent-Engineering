@@ -44,3 +44,28 @@
 **Out of Scope (별도 후속 작업)**: SKILL_ROUTING.md/MCP_ROUTING.md/CLAUDE.md 등 사용자-/프로젝트-범위 라우팅 문서의 cross-reference audit (`audit-instruction-docs` 스킬 사용 권장), Antigravity CLI 통합 실험 (현재 headless 모드 부족), amp 사용량 모니터링 정책.
 
 **Follow-up 권장**: (1) 다음 세션에서 `/audit-instruction-docs` 실행해서 user-scope 라우팅 문서들이 새 ai-* description과 일치하는지 점검. (2) 2026-06-18 이후 Antigravity CLI headless 모드 개선이 확인되면 ai-* 패밀리에 alternate provider로 재합류 검토 가능.
+
+---
+
+## 메모리 recall 재발 방지 — 워크플로 게이트 + 인덱스 밀도 (2026-06-16)
+
+**배경**: 감사/제안 작업에서 이미 걸러진 결정(statusLine 오탐 ×2, env-deny 확대)을 반복 재제기. 측정 결과 메모리 구성 자체는 양호(3계층 ~7KB, 글자 중복 ≈0); 실패 원인은 메커니즘에 있음 — (A) 세션 시작에 MEMORY.md *인덱스 한 줄*만 주입되고 토픽 파일 본문은 미로드, (B) 메모리는 advisory context라 강제력 없음. 공식 문서 처방: 강제는 훅, 하지만 비용 대비 효과로 워크플로 게이트(2) + 인덱스 밀도(3) 채택(사용자 확정).
+
+### Checklist
+
+- [x] **#2 WORKFLOW_ORCHESTRATION.md** — `## Recall Before Proposing (Audit / Review Gate)` 신규 섹션 추가 (Planning 직후, line 17). "recall first, scan second" + "drop, don't re-raise" + 재검증 규칙
+- [x] **#3 MEMORY.md** — `**[STANDING NO]**` 마커 컨벤션 도입: (a) 상단 legend 1줄(탈출구 포함 + 게이트 cross-ref), (b) 재제기된 3개 항목에 마커 prepend — routing slim floor / statusLine / .env deny glob overbroad
+- [x] **드리프트 정합** — `feedback_audit_recall_before_proposing.md` 본문 + MEMORY.md 인덱스 줄에 "WORKFLOW § Recall Before Proposing로 승격(2026-06-16)" 양방향 cross-ref 추가 (user CLAUDE.md 정합 규칙: level 2 갱신 시 level 5 메모리 reconcile)
+
+### Verification
+
+- [x] 3-question self-check (tests N/A — doc 변경; WHY는 섹션 인용문에 명시; Surgical Changes 준수)
+- [x] MEMORY.md 줄 수 = 17 (≤ 200 예산) ✅
+- [x] `[STANDING NO]` 4건 확인(legend 1 + 마커 3), WORKFLOW 섹션 line 17 존재 ✅
+- [x] git diff: 프로젝트 레포 2파일(WORKFLOW +20, todo). 메모리 2파일은 auto-memory(미추적)라 git 대상 아님 — 의도된 동작 ✅
+
+### Scope 결정사항
+
+- 게이트는 **프로젝트 스코프**(WORKFLOW_ORCHESTRATION.md) — 사용자가 옵션 2에서 명시 선택
+- 마커 대상은 **실제 재제기된 settled-decision 메모리 3개로 한정** (over-engineering 회피); 프로세스 규칙인 audit-recall 메모리는 마커 대상 아님(cross-ref만)
+- 커밋: `docs(workflow)` + `docs(memory)` 분리 가능, push는 명시 승인 후
