@@ -14,6 +14,26 @@
   - Record the assumption inline in the response, then proceed
   - **Irreversible actions still require explicit confirmation**: DB schema migrations, network calls with external side effects, destructive shell commands (`rm -rf`, `git reset --hard`, `git push --force`), production deploys, secret/credential changes
 
+## Recall Before Proposing (Audit / Review Gate)
+
+> Promoted 2026-06-16 after repeated re-raises of already-settled decisions
+> (statusLine false-positive ×2, env-deny widening). Auto-memory is advisory
+> context, not enforcement — and session start injects only the `MEMORY.md`
+> index line, NOT topic-file bodies. The body must be opened deliberately.
+
+For any audit, review, drift-check, or improvement-proposal task on harness /
+config / instruction docs:
+- **Recall first, scan second.** Before assembling any findings or proposal
+  list, open the relevant `feedback_*.md` / `reference_*.md` auto-memory topic
+  file(s) for the area under review — not just the `MEMORY.md` index line.
+  Then scan disk. Then build proposals.
+- **Drop, don't re-raise.** A finding that contradicts a recalled "standing NO"
+  / "already at correct shape" decision is dropped — unless new evidence
+  overrides the prior call, in which case cite that evidence and state
+  explicitly that you are reopening a settled decision.
+- Recalled memory reflects what was true when written; if it names a file /
+  flag / path, re-verify before acting.
+
 ## Subagent Usage
 
 > Overrides user-scope OMC `<delegation_rules>` (aggressive delegation). The mechanism is the user-scope `CLAUDE.md` § Instruction Precedence (Unified), which places project-scope rules at level 2 and OMC defaults at level 4 — so this file wins for delegation policy when active.
