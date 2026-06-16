@@ -49,6 +49,57 @@ config / instruction docs:
 - **Subagent gate failure**: Explore agents may return empty results due to plugin skill gate conflicts (e.g., a hook printing `SUBAGENT-STOP` or `EXTREMELY-IMPORTANT` markers in place of search results). If an agent returns gate-check output instead of actual results, switch to direct tools immediately — do not retry the same agent. (The original `superpowers` plugin that produced this exact pattern is no longer installed at user scope, but the same anti-pattern can recur with any future gate plugin.)
 - **Esc+Esc interrupt vs permission denial**: When a user interrupts a running Agent with Esc double-tap, Claude Code reports `"The user doesn't want to proceed"` — identical to a permission denial. Do not assume a hook or permission system blocked the call. Agent tool calls are auto-approved and do not show approval prompts.
 
+## External-Engine Implementation Handoff
+
+> Validated 2026-06-17 via E2E (gi-forge story → codex implementation → Claude
+> verify → done). Mechanics + version facts in auto-memory
+> `gi-forge-external-engine-handoff` and `codex-plugin-skill-drift-and-tty-search`.
+> codex/amp versions drift fast — re-verify the CLI interface (`{cli} --help`,
+> `/codex:setup`) before relying on exact flags.
+
+A gi-forge story file is an **engine-neutral handoff contract**: its embedded
+구현 계약 header lets *any* engine (Claude, codex, amp) implement the story from
+the file alone. The implementation step is therefore **routable per story** —
+Claude decides the route; **verification and deploy always stay in Claude**.
+
+**Routing (Claude decides, per story):**
+- **Claude direct** — ambiguity remains, interactive iteration likely, HALT
+  conditions likely to fire, or security-sensitive (auth/JWT/refresh/CORS/
+  rate-limit → review is MANDATORY per project Skill Policy; do not delegate
+  blindly).
+- **codex** (`ai-delegate`, or raw `codex exec`) — well-specified mechanical
+  story, sandbox safety, cross-model diversity, cost offload.
+- **codex parallel** (`ai-parallel`) — one story touches 5+ files with identical
+  transforms.
+- **amp** (`ai-delegate`, generic `amp -x`) — hard-reasoning story, or after
+  codex fails.
+
+**Delegation mechanics (only when routing to an external engine):**
+- The delegation prompt MUST include: *"follow the story's 구현 계약, but do NOT
+  run shell / tests / git — code edits only; verification is a separate step."*
+  `--sandbox workspace-write` blocks network, so a `uv`/`pytest` run **hangs**
+  the engine (measured ~5 min). Code-only avoids it.
+- Hand the engine the **story file path**, not a paraphrase — the contract
+  travels with the file.
+- Raw path (isolated dir / fixture): `codex exec --cd <repo> --sandbox
+  workspace-write -o <last.txt> "<prompt>"`. This sidesteps the `/codex:review`
+  silent-route and `codex --search` TTY traps (different subcommand).
+- Production path (target = session cwd): `Skill("/codex:rescue --wait --fresh
+  --write {story path + follow 구현 계약}")`. Never `/codex:review` (unregistered
+  → silent route to `code-review:code-review`) or `amp review` (experimental,
+  forces `--dangerously-allow-all`).
+
+**Claude owns (regardless of route):**
+- Before delegating: capture `baseline_commit` — the sandboxed engine cannot run
+  git.
+- After the engine returns: run the project test gates; optional cross-model
+  review via `ai-review`; flip the story `review → done` and mirror
+  `sprint-status.yaml`; commit. **Push requires explicit approval every time**
+  (auto-memory `feedback-project-repo-main-push`).
+- codex 0.140.0 reliably did the in-file bookkeeping (status transition, sprint
+  mirror, Dev Agent Record incl. honest deviation notes) when the prompt named
+  the contract — so Claude's role here is **verify-and-close, not redo**.
+
 ## Task Execution
 - Track progress by marking items complete in `tasks/todo.md` as you go
 - Provide a high-level summary of changes at each major step
