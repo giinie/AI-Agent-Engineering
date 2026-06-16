@@ -1,5 +1,40 @@
 # Todo
 
+## AGENTS.md 분리 — 크로스엔진 구현 핸드오프 기반 (2026-06-16)
+
+**배경**: gi-forge story 산출물을 Codex/amp에 구현 핸드오프하고 Claude로 검증/배포하는 워크플로우를 위해, 구현 엔진이 못 읽는 프로젝트 핵심 컨텍스트(commands/gotchas/architecture)를 엔진 독립 `AGENTS.md`로 분리. 공식 문서(code.claude.com/docs/en/memory § AGENTS.md) 확인: **Claude Code는 AGENTS.md를 네이티브로 안 읽음 → `@AGENTS.md` import가 정답**(이중 로드 없음). Windows는 symlink 대신 import 사용(문서 명시).
+
+**구조 (사용자 확정)**: AGENTS.md = 엔진 독립 정본 코어 / CLAUDE.md = `@AGENTS.md` + Claude·OMC 오버레이. 복사 ❌ import ⭕ (repo 내 중복 0).
+
+### Checklist
+
+- [x] `AGENTS.md` 신규 생성 — Project Context / Common Commands / Environment / Architecture / Project-Specific Gotchas / Code Quality(짧은 echo) / References 이동 (133줄)
+- [x] `CLAUDE.md` 재작성 — `@AGENTS.md` import + "## Claude Code" 오버레이(Rules/Precedence/Skill Policy/Mandatory Reading)만 잔류 (41줄)
+- [x] doc-sync/감사 타깃 **확장**(재지정 아님): Architecture·Gotchas 콘텐츠 규칙 → AGENTS.md, 오버레이 → CLAUDE.md, **둘 다 감사 집합 유지** (Skill Policy Doc sync 불릿 재작성)
+- [x] 신설 감사 차원: `### Instruction File Boundary` 섹션 추가 — import 링크 생존 + 분할 경계 정합 4표면 명문화
+
+### 감사 4표면 (분할이 만든 것)
+1. AGENTS.md 콘텐츠  2. CLAUDE.md 오버레이 콘텐츠  3. `@AGENTS.md` import 배선  4. 분할 경계 정합
+
+### Verification
+
+- [x] 3-question self-check (tests N/A — 문서 변경, 실행 코드 무변경; WHY는 AGENTS.md 헤더+Boundary 섹션에 명시; Surgical — 콘텐츠 verbatim 이동, 신규 추가는 Code Quality echo 4줄 + Boundary 섹션뿐)
+- [x] CLAUDE.md에 엔진 독립 콘텐츠 잔류 0 확인 (grep: uv sync/Chapter map/Python 3.12 등 본문 매치 없음, line 27 매치는 감사 *규칙*의 트리거 언급)
+- [x] `@` import 토큰 = 의도된 3줄만(7 `@AGENTS.md`, 13 `@WORKFLOW_ORCHESTRATION.md`, 22 user-scope ×2). prose 내 `@AGENTS.md`·`@WORKFLOW_ORCHESTRATION.md` 3건은 `@` 제거(재import 방지 — 신설 감사차원 ③이 첫 적용에서 자체 검출)
+- [x] 각 파일 200줄 soft target 준수 (41 / 133)
+
+### Review
+
+**변경 요약**: gi-forge story → Codex/amp 구현 핸드오프 → Claude 검증 워크플로우의 기반으로, 프로젝트 핵심 컨텍스트를 엔진 독립 `AGENTS.md`로 분리. `CLAUDE.md`는 `@AGENTS.md` import + Claude/OMC 오버레이로 축소(148→41줄). 공식 문서가 권장하는 정확한 패턴(Claude는 AGENTS.md 미독 → `@import`).
+
+**drift 방지**: repo 내 공유 코어 단일본(중복 0). doc-sync/감사 규칙을 **확장**(AGENTS.md 추가 + CLAUDE.md 유지, 둘 다)하고, 분할이 만든 새 감사 차원(import 링크·경계 정합) 4표면을 `### Instruction File Boundary`에 명문화.
+
+**미커밋**: 사용자 명시 승인 시 커밋 (CLAUDE.md commit protocol). 커밋 분리 권장: `docs(claude)` 1건(CLAUDE.md+AGENTS.md+todo).
+
+**후속(미적용, 사용자 선택)**: (1) gi-forge `templates/story.md`에 "외부 구현 엔진 핸드오프" 섹션(uv 실행/테스트 명령 + bounce 계약), (2) 워크플로우 절차 문서화, (3) user-scope `audit-instruction-docs` 스킬 감사 집합에 AGENTS.md 인지 추가.
+
+---
+
 ## ai-* 패밀리에서 Gemini CLI 제거 (2026-05-27)
 
 **배경**: Google이 2026-06-18에 Gemini CLI를 free/AI Pro/AI Ultra에서 서비스 중단. 대체재 Antigravity CLI는 headless 모드가 부족하여 ai-* 스킬 사용에 부적합. 사용자 결정에 따라 즉시 완전 제거.
