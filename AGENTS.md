@@ -19,8 +19,8 @@ uv sync
 # Run any script — uv handles venv activation
 uv run python ch02/simple_customer_support_agent.py
 
-# Run the full test suite
-uv run pytest -q
+# Run the full test suite (from the repo root the tests/ path is required — see Project-Specific Gotchas)
+uv run pytest tests/ -q
 
 # Run a single test file
 uv run pytest tests/evaluation/test_ai_judge.py -v
