@@ -31,7 +31,7 @@
 
 **미커밋**: 사용자 명시 승인 시 커밋 (CLAUDE.md commit protocol). 커밋 분리 권장: `docs(claude)` 1건(CLAUDE.md+AGENTS.md+todo).
 
-**후속(미적용, 사용자 선택)**: (1) gi-forge `templates/story.md`에 "외부 구현 엔진 핸드오프" 섹션(uv 실행/테스트 명령 + bounce 계약), (2) 워크플로우 절차 문서화, (3) user-scope `audit-instruction-docs` 스킬 감사 집합에 AGENTS.md 인지 추가.
+**후속(미적용, 사용자 선택)**: (1) gi-forge `templates/story.md`에 "외부 구현 엔진 핸드오프" 섹션(uv 실행/테스트 명령 + bounce 계약), (2) 워크플로우 절차 문서화. ~~(3) user-scope `audit-instruction-docs` 스킬 감사 집합에 AGENTS.md 인지 추가~~ → **완료**: 스킬 File Lists가 AGENTS.md를 split 처리(엔진 독립 코어 = 1차 드리프트 검증 홈)까지 명시 (2026-06-18 프로젝트 scope 감사에서 확인).
 
 ---
 
