@@ -75,15 +75,26 @@ Claude decides the route; **verification and deploy always stay in Claude**.
   codex fails.
 
 **Delegation mechanics (only when routing to an external engine):**
-- The delegation prompt MUST include: *"follow the story's 구현 계약, but do NOT
-  run shell / tests / git — code edits only; verification is a separate step."*
-  `--sandbox workspace-write` blocks network, so a `uv`/`pytest` run **hangs**
-  the engine (measured ~5 min). Code-only avoids it.
+- The delegation prompt MUST scope the constraint to command *execution*, not
+  file I/O: *"follow the story's 구현 계약; you MAY read and write project files
+  (that is how you implement), but do NOT EXECUTE tests / build-or-sync
+  (`uv`/`pip`/`python -m`) / `git` / network — verification is a separate step."*
+  A blanket *"do NOT run shell / code edits only"* **mis-fires on codex**: codex
+  reads files through its shell tool, so "no shell" blocks it from even reading
+  the story file and it returns 0 files (observed v5, 2026-06-18 — the corrected
+  wording then worked first try). `--sandbox workspace-write` blocks network, so
+  an actually-executed `uv`/`pytest` run **hangs** the engine (~5 min) — that is
+  why *execution* is forbidden while reads/writes are explicitly permitted.
 - Hand the engine the **story file path**, not a paraphrase — the contract
   travels with the file.
 - Raw path (isolated dir / fixture): `codex exec --cd <repo> --sandbox
-  workspace-write -o <last.txt> "<prompt>"`. This sidesteps the `/codex:review`
-  silent-route and `codex --search` TTY traps (different subcommand).
+  workspace-write - < <prompt-file>` (stdin redirect avoids quoting; capture
+  stdout with `> <log>`). This sidesteps the `/codex:review` silent-route and
+  `codex --search` TTY traps (different subcommand). **Use this — NOT
+  `/codex:rescue` — whenever the target is an isolated dir**: `ai-delegate`'s
+  Tier-1 codex path (`/codex:rescue`) runs in the **session cwd** and has no
+  `--cd` routing, so it cannot aim at a separate dir and would mutate the wrong
+  repo (confirmed v5, 2026-06-18).
 - Production path (target = session cwd): `Skill("/codex:rescue --wait --fresh
   --write {story path + follow 구현 계약}")`. Never `/codex:review` (unregistered
   → silent route to `code-review:code-review`) or `amp review` (experimental,
