@@ -19,7 +19,8 @@ uv sync
 # Run any script — uv handles venv activation
 uv run python ch02/simple_customer_support_agent.py
 
-# Run the full test suite (from the repo root the tests/ path is required — see Project-Specific Gotchas)
+# Run the full test suite (the tests/ path is required from the repo root — see Project-Specific Gotchas).
+# Expect 2 skips: the optional fine-tuning extra is absent, and one agent test is gated on the LangChain 1.0 migration.
 uv run pytest tests/ -q
 
 # Run a single test file
@@ -99,10 +100,10 @@ The two layouts overlap intentionally for pedagogical reasons. When asked to mod
 
 > Path-scoped gotchas (fine-tuning, MCP server copies, observability) live in `.claude/rules/`. Claude Code auto-loads them when reading files under their target paths (`ch07/**`, `src/fine_tuning/**`, `ch04/mcp_servers/**`, `src/common/mcp/**`, `src/common/observability/**`); other engines should read those rule files manually when working under those paths. The entries below are command/build-level (triggered by intent, not file reads) and stay eager here.
 
-### Test import path is broken at the repo root (verified)
-Tests use bare `from common.evaluation.ai_judge import AIJudge` style, but `uv run pytest` from the repo root fails with `ModuleNotFoundError: No module named 'common'`. There is **no `conftest.py` at the repo root** to add `src/` to `sys.path`, and `pyproject.toml` configures hatchling with `packages = ["src"]` (which would install as `src.common.*`, not `common.*`).
-- The tests presumably worked when invoked from inside `src/` or via an IDE that injects sources roots (the `.idea/` config + JetBrains MCP bridge in `.mcp.json` suggests this).
-- For headless `uv run pytest`: either add a root `conftest.py` doing `sys.path.insert(0, str(Path(__file__).parent / "src"))`, or ask the user before rewriting all `from common...` to `from src.common...`. Don't silently change either without confirmation.
+### Test import path: bare `common.*` imports resolved via root `conftest.py`
+Tests import the cross-cutting modules with the bare `from common.evaluation.ai_judge import AIJudge` style, but those packages live under `src/`, which hatchling installs as `src.common.*` (`packages = ["src"]`) — so `common` is not importable from a headless `uv run pytest`. The repo-root `conftest.py` does `sys.path.insert(0, str(Path(__file__).parent / "src"))` so the bare imports resolve.
+- Before this `conftest.py` existed, `uv run pytest` failed with `ModuleNotFoundError: No module named 'common'`; the import style only worked via IDE source-root injection (`.idea/` config + JetBrains MCP bridge in `.mcp.json`).
+- Keep the bare `from common...` imports as-is — the root `conftest.py` is the chosen fix; do **not** rewrite them to `from src.common...`.
 
 ### `pytest.ini` overrides `pyproject.toml` test config
 The repo has BOTH `pytest.ini` (only `filterwarnings`) and `[tool.pytest.ini_options]` in `pyproject.toml` (with `testpaths = ["tests"]`, etc.). When `pytest.ini` exists, pytest **ignores** the pyproject.toml block entirely. Consequence: `uv run pytest` collects every `test_*.py` in the repo, including `ch07/test_dpo_model.py` / `ch07/test_sft_model.py` / `ch07/test_rlvr_model.py` (which require the optional `fine-tuning` extras and fail with `ModuleNotFoundError: No module named 'peft'` by default).
@@ -113,10 +114,16 @@ The repo has BOTH `pytest.ini` (only `filterwarnings`) and `[tool.pytest.ini_opt
 `pyproject.toml` declares dev dependencies in **both** `[project.optional-dependencies] dev` (PEP 631, for `pip install -e .[dev]` callers) and `[dependency-groups] dev` (PEP 735, uv-canonical). Content is identical and must be kept in sync manually when adding/removing dev tools — `uv add --dev <pkg>` only updates the `[dependency-groups]` block. Migration from the legacy `[tool.uv].dev-dependencies` form was completed in commit `060ccd0`; don't reintroduce that section.
 
 ### `src/__init__.py` exists
-`src/` is a Python package, not a source root. Tests that already work via the bare-`common` style imply some sys.path manipulation is happening (likely IDE-level via `.idea/` for JetBrains, see `.mcp.json`). Headless `uv run pytest` may not replicate this.
+`src/` is a Python package, not a source root. The bare-`common` import style works headlessly because the repo-root `conftest.py` puts `src/` on `sys.path` (see "Test import path" above); IDEs additionally inject it via `.idea/` source roots.
 
 ### `.mcp.json` registers a JetBrains SSE bridge
 The local `.mcp.json` points at the JetBrains IDE plugin's local SSE endpoint (`http://127.0.0.1:<dynamic-port>/sse`). The port is assigned by the JetBrains plugin at IDE startup and changes between sessions — do **not** treat the exact port as a current-state fact. Verify with `cat .mcp.json` if the value matters. The file is gitignored (`.mcp.json` in `.gitignore`) and **not tracked** — `git ls-files .mcp.json` returns nothing; the JetBrains plugin recreates it on demand. Don't add secrets here; use `.mcp.json.example` for templates.
+
+### LangChain 1.0 migration is incomplete (`langchain.schema` removed)
+14 source files under `src/frameworks/langgraph_agents/` (plus `src/common/evaluation/batch_evaluation.py`) still `from langchain.schema import ...`, a module **removed in LangChain 1.0**. With langchain pinned `>=1.1.0` (`pyproject.toml`), those modules fail to import (`ModuleNotFoundError: No module named 'langchain.schema'`) — the affected agents are currently non-importable. The replacement is `from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage` (verified present in the installed `langchain_core`).
+- Enumerate every site: `grep -rn "langchain.schema" --include="*.py" src/`.
+- `tests/frameworks/langgraph_agents/test_langgraph_customer_support_agent.py` is `pytest.skip(allow_module_level=True)`-guarded pending this migration; drop the skip once `customer_support_agent.py` is migrated.
+- The edit is mechanical, but each file also carries pre-existing lint debt (a misplaced `from __future__ import annotations` above the module docstring → an E402 cascade) that the `ruff` PostToolUse gate surfaces the moment you touch the file — budget for that cleanup per file.
 
 ## Code Quality
 
