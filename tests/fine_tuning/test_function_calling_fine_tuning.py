@@ -16,13 +16,20 @@ from __future__ import annotations
 import argparse
 import os
 from enum import Enum
-from functools import partial
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
+
+import pytest
+
+# This module pulls in the optional ``fine-tuning`` extra (datasets, peft,
+# transformers, torch, ...). Skip the whole module when that extra is not
+# installed so the default ``uv run pytest tests/`` stays green without the
+# heavy deps.
+pytest.importorskip("datasets")
 
 import torch
 from datasets import DatasetDict, load_dataset
-from peft import LoraConfig, PeftConfig, PeftModel, TaskType
+from peft import LoraConfig, TaskType
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
