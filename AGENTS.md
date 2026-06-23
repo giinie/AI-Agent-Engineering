@@ -123,7 +123,7 @@ The local `.mcp.json` points at the JetBrains IDE plugin's local SSE endpoint (`
 13 source files under `src/frameworks/langgraph_agents/` (plus `src/common/evaluation/batch_evaluation.py` — 14 total) still `from langchain.schema import ...`, a module **removed in LangChain 1.0**. With langchain pinned `>=1.1.0` (`pyproject.toml`), those modules fail to import (`ModuleNotFoundError: No module named 'langchain.schema'`) — the affected agents are currently non-importable. The replacement is `from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage` (verified present in the installed `langchain_core`).
 - Enumerate every site: `grep -rn "langchain.schema" --include="*.py" src/`.
 - `tests/frameworks/langgraph_agents/test_langgraph_customer_support_agent.py` is `pytest.skip(allow_module_level=True)`-guarded pending this migration; drop the skip once `customer_support_agent.py` is migrated.
-- The edit is mechanical, but each file also carries pre-existing lint debt (a misplaced `from __future__ import annotations` above the module docstring → an E402 cascade) that the `ruff` PostToolUse gate surfaces the moment you touch the file — budget for that cleanup per file.
+- The edit is mechanical, but each file also carries pre-existing lint debt (a misplaced `from __future__ import annotations` above the module docstring → an E402 cascade) that the project's ruff lint gate (a Claude Code PostToolUse hook; other engines run `ruff` manually) surfaces the moment you touch the file — budget for that cleanup per file.
 
 ## Code Quality
 
