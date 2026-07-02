@@ -2,7 +2,7 @@
 
 Engine-independent project core for **"AI 에이전트 엔지니어링"** (Building Applications with AI Agents, 한빛미디어) — the Korean edition example code.
 
-This file is the **canonical home** for the facts every coding agent needs (project context, build/test commands, architecture, gotchas). Claude Code reads it via the `@AGENTS.md` import in `CLAUDE.md`; Codex (project `AGENTS.md` / `~/.codex/AGENTS.md`) and other agents (e.g. amp) read it directly. **Claude/OMC-specific runtime instructions** (skill routing, hooks, the recall gate, delegation policy) live in `CLAUDE.md`'s "## Claude Code" overlay, **not here** — keep that boundary clean.
+This file is the **canonical home** for the facts every coding agent needs (project context, build/test commands, architecture, gotchas). Claude Code reads it via the `AGENTS.md` import in `CLAUDE.md`; Codex (project `AGENTS.md` / `~/.codex/AGENTS.md`) and other agents (e.g. amp) read it directly. **Claude/OMC-specific runtime instructions** (skill routing, hooks, the recall gate, delegation policy) live in `CLAUDE.md`'s "## Claude Code" overlay, **not here** — keep that boundary clean.
 
 ## Project Context
 
