@@ -19,7 +19,7 @@ delegation defaults (including OMC delegation_rules).
 
 ### Skill Policy
 
-Inherits skill routing from `@~/.claude/SKILL_ROUTING.md` and MCP catalog from `@~/.claude/MCP_ROUTING.md`. Project-specific additions:
+Inherits skill routing from `~/.claude/SKILL_ROUTING.md` and MCP catalog from `~/.claude/MCP_ROUTING.md`. Project-specific additions:
 
 - **Security-related changes** (auth / JWT / refresh token rotation / CORS / rate-limit): Review is MANDATORY. Use `security-review` (built-in) for the change scan, or delegate to the `oh-my-claudecode:security-reviewer` agent. For systematic root-cause investigation of a security regression, use `oh-my-claudecode:debug` (per `~/.claude/SKILL_ROUTING_DETAIL.md` § Security).
 - **New business logic**: The existing integration/unit test suite is solid — write tests first manually, optionally delegating scaffolding to the `oh-my-claudecode:executor` agent. No TDD-specific skill is installed at user scope (see `~/.claude/SKILL_ROUTING_DETAIL.md` § Deprecated / Uninstalled — the `superpowers:test-driven-development` row documents the no-replacement fallback).
