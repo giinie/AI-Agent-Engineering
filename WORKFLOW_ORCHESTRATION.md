@@ -61,8 +61,8 @@ every time**.
 
 Full routing criteria, delegation prompt wording, sandbox traps, and Claude's
 verify-and-close duties: invoke the **`external-engine-handoff` skill**
-(`.claude/skills/external-engine-handoff/SKILL.md`) BEFORE delegating any
-story to codex/amp.
+(user-scope, `~/.claude/skills/external-engine-handoff/SKILL.md`) BEFORE
+delegating any story to codex/amp.
 
 ## Task Execution
 - Track progress by marking items complete in `tasks/todo.md` as you go
