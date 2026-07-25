@@ -37,6 +37,7 @@ uv add --dev <package>
 uv sync --extra fine-tuning
 
 # Run batch evaluation (entry point referenced from project.md)
+# NOTE: currently fails at import until the LangChain 1.0 migration lands (see Project-Specific Gotchas)
 uv run python -m src.common.evaluation.batch_evaluation \
   --dataset src/common/evaluation/scenarios/<domain>_evaluation_set.jsonl \
   --graph_py src/frameworks/langgraph_agents/<domain>/<agent>.py
