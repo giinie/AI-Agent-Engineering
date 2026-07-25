@@ -33,7 +33,7 @@ uv run pytest tests/evaluation/test_ai_judge.py::TestAIJudge::test_specific_meth
 uv add <package>
 uv add --dev <package>
 
-# Optional: install fine-tuning extras (heavy: torch, transformers, peft, trl, bitsandbytes)
+# Optional: install fine-tuning extras (heavy: torch, transformers, peft, trl, bitsandbytes, datasets)
 uv sync --extra fine-tuning
 
 # Run batch evaluation (entry point referenced from project.md)
@@ -106,7 +106,7 @@ Tests import the cross-cutting modules with the bare `from common.evaluation.ai_
 - Keep the bare `from common...` imports as-is — the root `conftest.py` is the chosen fix; do **not** rewrite them to `from src.common...`.
 
 ### `pytest.ini` overrides `pyproject.toml` test config
-The repo has BOTH `pytest.ini` (only `filterwarnings`) and `[tool.pytest.ini_options]` in `pyproject.toml` (with `testpaths = ["tests"]`, etc.). When `pytest.ini` exists, pytest **ignores** the pyproject.toml block entirely. Consequence: `uv run pytest` collects every `test_*.py` in the repo, including `ch07/test_dpo_model.py` / `ch07/test_sft_model.py` / `ch07/test_rlvr_model.py` (which require the optional `fine-tuning` extras and fail with `ModuleNotFoundError: No module named 'peft'` by default).
+The repo has BOTH `pytest.ini` (only `filterwarnings`) and `[tool.pytest.ini_options]` in `pyproject.toml` (with `testpaths = ["tests"]`, etc.). When `pytest.ini` exists, pytest **ignores** the pyproject.toml block entirely. Consequence: `uv run pytest` collects every `test_*.py` in the repo, including `ch07/test_dpo_model.py` / `ch07/test_sft_model.py` (which import `peft` from the optional `fine-tuning` extras and fail with `ModuleNotFoundError: No module named 'peft'` by default; `ch07/test_rlvr_model.py` imports only torch/transformers, present as transitive deps, so it collects fine).
 - Workaround for normal runs: `uv run pytest tests/ -q` (explicit path) or merge the pyproject `[tool.pytest.ini_options]` keys into `pytest.ini`.
 - Don't "fix" by deleting `pytest.ini` — its `filterwarnings` setting is intentional.
 
