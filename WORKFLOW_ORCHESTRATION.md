@@ -41,7 +41,7 @@ config / instruction docs:
 - Spawn subagents **only when context isolation is explicitly needed**:
   - Parallel independent analysis (e.g., reviewing multiple modules simultaneously)
   - Research/exploration that would pollute the main context window
-  - Adversarial review: one subagent implements, a separate reviewer subagent critiques
+  - Adversarial review — **security-sensitive changes only** (auth / JWT / refresh token / CORS / rate-limit, where the Skill Policy already makes review MANDATORY): one subagent implements, a separate reviewer subagent critiques. Outside that carve-out, do NOT use a subagent to verify or double-check your own work — see § Verification
 - One focused task per subagent — never multiplex unrelated concerns in a single subagent
 - Do NOT spawn subagents for simple sequential tasks; keep the main context clean instead
 - Prefer 2–3 targeted subagents over large swarms — you cannot effectively observe 10+ agents
@@ -73,10 +73,7 @@ delegating any story to codex/amp.
 - Never mark a task complete without proving it works
 - Run tests, check logs, and demonstrate correctness before reporting done
 - When relevant, diff behavior between main branch and your changes
-- Before presenting results, run a 3-question self-check:
-  1. Tests pass?
-  2. Is the WHY of new code clear (annotation in Key Patterns if applicable)?
-  3. No Critical Rules violated?
+- Do NOT layer a separate self-review or verifier pass on top of the above. Claude Opus 5 self-verifies and self-corrects; added re-check steps spend tokens without improving quality (official Opus 5 prompting guide § "Task scope and over-verification", § "Self-correction"). Real verification — actually running the tests/commands and reporting the results — is unaffected. This guidance is model-specific: re-evaluate if main moves off Opus 5
 
 ## Bug Fixing
 - When given a bug report: just fix it — no hand-holding required for localized fixes.
