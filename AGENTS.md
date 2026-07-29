@@ -80,22 +80,6 @@ The two layouts overlap intentionally for pedagogical reasons. When asked to mod
 - `src/frameworks/langgraph_agents/<domain>/` — **7 production-style domain agents** (ecommerce, financial_services, healthcare, it_helpdesk, legal, soc, supply_chain). Each domain pairs an agent file with a JSONL evaluation set under `src/common/evaluation/scenarios/`.
 - `src/fine_tuning/` — SFT, DPO, RLVR scripts. Training data in `training_data/*.jsonl`. Output checkpoints land under `ch07/fine_tuned_model/` (gitignored).
 
-### Chapter map (ch02–ch12)
-
-| Ch | Topic | Key files |
-|----|-------|-----------|
-| 02 | Simple agent + evaluation | `simple_customer_support_agent.py`, `customer_support_agent_evaluation.py` |
-| 03 | Realtime voice agent | FastAPI + WebSockets backend (`realtime_voice_agent.py`) + browser client (`index.html`) |
-| 04 | Tool use + MCP | Calculator/Wikipedia/Stock tools; `mcp_servers/` (math, weather) — note: duplicates `src/common/mcp/` |
-| 05 | Skill selection | basic / semantic (embedding) / hierarchical |
-| 06 | Memory | `short_term_memory.py` (LangGraph `MemorySaver`), `basic_bm25.py` (long-term retrieval primitives), `graphrag_test.sh` |
-| 07 | Learning + fine-tuning | Reflexion, experiential learning, SFT, DPO, RLVR + `test_*_model.py` runners |
-| 08 | Multi-agent supply chain | LangGraph baseline + Ray / Redis Streams / Temporal variants + `adas/` (Automated Design of Agentic Systems) + `a2a/` |
-| 09 | Evaluation | `metrics.py`, `memory_evaluation.py`, `batch_evaluation.py`, `agents/`, `scenarios/` (mirrors `src/common/evaluation/`) |
-| 10 | Distribution shifts | KS test / KL divergence / PSI / embedding-based drift |
-| 11 | SOC analyst | `soc_analyst_agent.py` + DSPy-based optimizers |
-| 12 | Prompt injection defense | `llm-guard` based blocklist + PII anonymization |
-
 `notebook/ch0X_*.ipynb` — Colab-friendly versions (Traceloop/Loki removed; ch03 won't run in Colab; ch08 distributed variants need extra infra).
 
 ## Project-Specific Gotchas
