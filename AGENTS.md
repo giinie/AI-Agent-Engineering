@@ -70,13 +70,6 @@ The two layouts overlap intentionally for pedagogical reasons. When asked to mod
 
 ### `src/` module structure (cross-cutting concerns)
 
-- `src/common/` — framework-agnostic infrastructure
-  - `evaluation/` — `metrics.py` (Tool Recall/Precision, Phrase Recall, Task Success), `ai_judge.py` (LLM-as-judge), `batch_evaluation.py` (the JSONL → metrics pipeline), `memory_evaluation.py`, `distribution_shifts.py`. Domain scenarios live in `evaluation/scenarios/*.jsonl`.
-  - `observability/` — `loki_logger.py` (HTTP push to `LOKI_ENDPOINT`), `instrument_tempo.py` (OTLP spans → `TEMPO_ENDPOINT`), plus `docker-compose.yaml` to run the stack locally.
-  - `a2a/` — Agent-to-Agent JSON-RPC 2.0 protocol (`agent_server.py` exposes `/.well-known/agent.json`, `agent_client.py` discovers and calls).
-  - `mcp/` — Model Context Protocol servers (math, weather) over stdio.
-  - `graph_rag.py` — single-file Graph RAG implementation (chunking → entity extraction → Leiden community detection → hierarchical summarization).
-- `src/frameworks/<framework>_agents/` — agent implementations grouped by SDK (`langchain/`, `langgraph_agents/`, `autogen_agents/`, `open_ai/`).
 - `src/frameworks/langgraph_agents/<domain>/` — **7 production-style domain agents** (ecommerce, financial_services, healthcare, it_helpdesk, legal, soc, supply_chain). Each domain pairs an agent file with a JSONL evaluation set under `src/common/evaluation/scenarios/`.
 - `src/fine_tuning/` — SFT, DPO, RLVR scripts. Training data in `training_data/*.jsonl`. Output checkpoints land under `ch07/fine_tuned_model/` (gitignored).
 
