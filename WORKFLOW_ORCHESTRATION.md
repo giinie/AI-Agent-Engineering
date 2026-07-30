@@ -96,8 +96,6 @@ delegating any story to codex/amp.
 > Inherits `~/.claude/CODE_QUALITY.md` (Simplicity First + Surgical Changes).
 > This section adds project-specific deltas only — do not restate user-scope rules.
 
-**Priority** (matches user-scope `~/.claude/CODE_QUALITY.md`, restated for visibility since this drives every project decision): `Correctness > Simplicity > Elegance > Speed`.
-
 - No temporary fixes — find and address root causes
 - After a non-trivial change, ask once about **code just written in this session**:
   "Is there a more elegant solution?" — If yes and low-risk, refactor. Else ship.
