@@ -24,10 +24,16 @@
 For any audit, review, drift-check, or improvement-proposal task on harness /
 config / instruction docs:
 - **Recall first, scan second.** Before assembling any findings or proposal
-  list, list the area's auto-memory directory (`~/.claude/projects/<slug>/memory/`)
-  and open the topic-file bodies relevant to the area under review — not just the
-  `MEMORY.md` index line. Filename prefixes (`feedback-`, `reference-`,
-  `harness-`, …) are a convention, not a filter: do not glob by prefix.
+  list, read two stores — never sweep other projects:
+  1. This project's auto-memory (`~/.claude/projects/<slug>/memory/`) — list the
+     directory and open the topic-file bodies relevant to the area under review,
+     not just the `MEMORY.md` index line. Filename prefixes (`feedback-`,
+     `reference-`, `harness-`, …) are a convention, not a filter: do not glob by
+     prefix.
+  2. `standingDecisions` in `~/.claude/.harness-audit-state.json` — user-scope
+     decisions that hold in every project. This project's auto-memory cannot carry
+     one settled while another project was open.
+
   Then scan disk. Then build proposals.
 - **Drop, don't re-raise.** A finding that contradicts a recalled "standing NO"
   / "already at correct shape" decision is dropped — unless new evidence
