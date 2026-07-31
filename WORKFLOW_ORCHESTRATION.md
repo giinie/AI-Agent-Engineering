@@ -24,8 +24,10 @@
 For any audit, review, drift-check, or improvement-proposal task on harness /
 config / instruction docs:
 - **Recall first, scan second.** Before assembling any findings or proposal
-  list, open the relevant `feedback-*.md` / `reference-*.md` auto-memory topic
-  file(s) for the area under review — not just the `MEMORY.md` index line.
+  list, list the area's auto-memory directory (`~/.claude/projects/<slug>/memory/`)
+  and open the topic-file bodies relevant to the area under review — not just the
+  `MEMORY.md` index line. Filename prefixes (`feedback-`, `reference-`,
+  `harness-`, …) are a convention, not a filter: do not glob by prefix.
   Then scan disk. Then build proposals.
 - **Drop, don't re-raise.** A finding that contradicts a recalled "standing NO"
   / "already at correct shape" decision is dropped — unless new evidence
