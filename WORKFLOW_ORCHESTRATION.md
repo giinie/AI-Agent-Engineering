@@ -86,9 +86,9 @@ delegating any story to codex/amp.
 
 ## Lessons & Self-Improvement
 
-> **Where to record**: project-specific patterns (this codebase's file paths, repo conventions, gotchas) → `tasks/lessons.md`. Cross-project user/tool feedback (toolchain quirks, OMC behavior, environment) → user-scope auto-memory at `~/.claude/projects/<slug>/memory/`. If a pattern applies beyond this project, prefer auto-memory.
+> **Where to record**: project-specific patterns (this codebase's file paths, repo conventions, gotchas) → `tasks/lessons.md`. Tool/environment feedback from working here (toolchain quirks, OMC behavior) → this project's auto-memory at `~/.claude/projects/<slug>/memory/` — note this store is keyed by the session's working directory, so it is **NOT visible from other projects**. A decision that must hold in *every* project (a user-scope harness standing NO about `~/.claude/**`) belongs in `standingDecisions` in `~/.claude/.harness-audit-state.json` instead; auto-memory would silently scope it to whichever project happened to be open.
 
-- After a user correction that reveals a **non-obvious or recurring pattern**, append it to `tasks/lessons.md` (project-scope) or save it as a feedback memory (cross-project).
+- After a user correction that reveals a **non-obvious or recurring pattern**, append it to `tasks/lessons.md` (project-scope) or save it as a feedback memory — routing it by the scope the pattern governs, per the note above.
 - Format for `tasks/lessons.md`: `[date] Pattern: <what went wrong> → Rule: <how to prevent it>`
 - Keep `tasks/lessons.md` concise — prune entries that no longer apply
 - Promote rules to this file (WORKFLOW_ORCHESTRATION.md) when violated 3+ times across sessions, OR when a single violation has high blast radius (e.g., security, data loss, irreversible state changes)
