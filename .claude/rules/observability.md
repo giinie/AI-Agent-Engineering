@@ -5,4 +5,4 @@ paths:
 
 # Observability is opt-in
 
-`loki_logger.py` and `instrument_tempo.py` no-op gracefully if `LOKI_ENDPOINT` / `TEMPO_ENDPOINT` are unreachable, but errors may surface in logs. Either start the local stack (`cd src/common/observability && docker-compose up -d`) or stub these calls when running examples standalone.
+`loki_logger.py` and `instrument_tempo.py` hardcode `http://localhost:3100` / `http://localhost:3200` — they ignore the `LOKI_ENDPOINT` / `TEMPO_ENDPOINT` entries in `.env.example`, which are dead config. `log_to_loki()` posts with no try/except and no timeout, so it raises `ConnectionError` when the stack is down; it does **not** degrade quietly. Either start the local stack (`cd src/common/observability && docker-compose up -d`) or stub these calls when running examples standalone.
