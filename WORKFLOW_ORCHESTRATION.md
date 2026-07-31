@@ -24,7 +24,7 @@
 For any audit, review, drift-check, or improvement-proposal task on harness /
 config / instruction docs:
 - **Recall first, scan second.** Before assembling any findings or proposal
-  list, open the relevant `feedback_*.md` / `reference_*.md` auto-memory topic
+  list, open the relevant `feedback-*.md` / `reference-*.md` auto-memory topic
   file(s) for the area under review — not just the `MEMORY.md` index line.
   Then scan disk. Then build proposals.
 - **Drop, don't re-raise.** A finding that contradicts a recalled "standing NO"
