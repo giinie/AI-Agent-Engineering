@@ -74,7 +74,7 @@ delegating any story to codex/amp.
 
 ## Task Execution
 - Track progress by marking items complete in `tasks/todo.md` as you go
-- Provide a high-level summary of changes at each major step
+- Give a brief progress update when you find something important or change direction, and lead with the outcome — do not narrate every step
 - Add a review section to `tasks/todo.md` when the task is complete
 
 ## Verification
