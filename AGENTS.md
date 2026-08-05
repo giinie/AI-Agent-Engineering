@@ -50,7 +50,7 @@ cd src/common/observability && docker-compose up -d
 ### Environment
 
 - Python is **pinned to 3.12** (`>=3.12,<3.13` in `pyproject.toml`; venv runs CPython 3.12.11). Do not assume 3.13+ syntax/stdlib.
-- `.env` is required at the repo root with `OPENAI_API_KEY` (template: `.env.example`). Some examples additionally need `WOLFRAM_ALPHA_APP_ID`, `YOUR_SLACK_BOT_TOKEN`, `TRACELOOP_API_KEY`, `LANGCHAIN_API_KEY`.
+- `.env` is required at the repo root with `OPENAI_API_KEY` (template: `.env.example`). Some examples additionally need `WOLFRAM_ALPHA_APP_ID`, `YOUR_SLACK_BOT_TOKEN`, or `TRACELOOP_API_KEY`. The `LANGCHAIN_*` block in `.env.example` is optional LangSmith tracing, off by default (`LANGCHAIN_TRACING_V2=false`) and read by no example — `langsmith` is only a transitive dependency.
 - WSL is recommended on Windows because some dependencies don't work on native Win32.
 
 ## Architecture — Big Picture
@@ -106,7 +106,7 @@ The local `.mcp.json` points at the JetBrains IDE plugin's local SSE endpoint (`
 
 ## Code Quality
 
-**Priority** (engine-independent; full rules in `WORKFLOW_ORCHESTRATION.md` § Code Quality and user-scope `~/.claude/CODE_QUALITY.md`): `Correctness > Simplicity > Elegance > Speed`.
+**Priority** (engine-independent; full rules in `WORKFLOW_ORCHESTRATION.md` § Code Quality): `Correctness > Simplicity > Elegance > Speed`.
 
 - Fix root causes, not temporary patches.
 - Write the simplest change that solves the problem; match existing style; touch only what you must.
