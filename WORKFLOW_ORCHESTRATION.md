@@ -27,9 +27,10 @@ config / instruction docs:
   list, read two stores — never sweep other projects:
   1. This project's auto-memory (`~/.claude/projects/<slug>/memory/`) — list the
      directory and open the topic-file bodies relevant to the area under review,
-     not just the `MEMORY.md` index line. Filename prefixes (`feedback-`,
-     `reference-`, `harness-`, …) are a convention, not a filter: do not glob by
-     prefix.
+     not just the `MEMORY.md` index line. The index is a convenience, not the
+     denominator: it can lag a newly written topic file. Filename prefixes
+     (`feedback-`, `reference-`, `harness-`, …) are a convention, not a filter:
+     do not glob by prefix — memory type lives in frontmatter `metadata.type`.
   2. `standingDecisions` in `~/.claude/.harness-audit-state.json` — user-scope
      decisions that hold in every project. This project's auto-memory cannot carry
      one settled while another project was open.
