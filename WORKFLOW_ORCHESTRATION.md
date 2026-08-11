@@ -82,7 +82,7 @@ delegating any story to codex/amp.
 - Never mark a task complete without proving it works
 - Run tests, check logs, and demonstrate correctness before reporting done
 - When relevant, diff behavior between main branch and your changes
-- Do NOT layer a separate self-review or verifier pass on top of the above. Claude Opus 5 self-verifies and self-corrects; added re-check steps spend tokens without improving quality (official Opus 5 prompting guide § "Task scope and over-verification", § "Self-correction"). Real verification — actually running the tests/commands and reporting the results — is unaffected. This guidance is model-specific: re-evaluate if main moves off Opus 5
+- Do NOT layer a reflexive self-review or verifier pass on top of the above for routine work. Claude Fable 5 produces strong verification behavior on its own at higher effort (official Fable 5 prompting guide § "Consider all effort levels"). Exception: for long-running autonomous work, "separate, fresh-context verifier subagents tend to outperform self-critique" (§ "Recommended scaffolding changes") — interval checks by a fresh subagent are then aligned, not over-verification. Real verification — actually running the tests/commands and reporting the results — is unaffected. This guidance is model-specific: re-evaluate if main moves off Fable 5
 
 ## Bug Fixing
 - When given a bug report: just fix it — no hand-holding required for localized fixes.
