@@ -104,3 +104,27 @@
 - 게이트는 **프로젝트 스코프**(WORKFLOW_ORCHESTRATION.md) — 사용자가 옵션 2에서 명시 선택
 - 마커 대상은 **실제 재제기된 settled-decision 메모리 3개로 한정** (over-engineering 회피); 프로세스 규칙인 audit-recall 메모리는 마커 대상 아님(cross-ref만)
 - 커밋: `docs(workflow)` + `docs(memory)` 분리 가능, push는 명시 승인 후
+
+---
+
+## 모델 조건부 지침 전환 — Fable 5 ↔ Opus 5 수시 전환 대응 (2026-08-12)
+
+**배경**: main이 Fable 5/Opus 5를 수시 전환하게 됨(사용자 고지). 기존 "main이 X에서 벗어나면 재평가" 방식은 전환마다 문서 편집·커밋을 요구(`e080fd8`, `755c082` — 이번 주만 2회). 모델 조건부(공통 불변 조항 + 모델별 분기) 구조로 전환. 활성 모델 판별은 세션 자체(시스템 프롬프트 Environment) 기준 — settings.json은 시작 기본값일 뿐.
+
+**근거 재검증**: Opus 5 가이드 인용 3개 절 + § "Written deliverable length" 실재 WebFetch 확인(2026-08-12). 분기 본문은 doc-검증된 기존 커밋 원문 재사용(`d7c8594` Opus, `e080fd8` Fable) — 새 주장 없음.
+
+### Checklist
+
+- [x] ① `~/.claude/CLAUDE.md` 모델 정렬 블록 → 조건부 구조(공통/Fable/Opus 분기)
+- [x] ② `~/.claude/USER_REQUIREMENTS.md` § Documentation Length → 양 모델 근거 병기
+- [x] ③ `~/.claude/SKILL_ROUTING_DETAIL.md` 2행 → 모델 중립 포인터, fresh-verifier 예외 "Fable 5 한정" 명시
+- [x] ④ 부트스트랩 템플릿 WORKFLOW § Verification → 조건부(Opus 5 잔존 해소 겸)
+- [x] ⑤ 프로젝트 `WORKFLOW_ORCHESTRATION.md` § Verification → 조건부
+- [x] ⑥ 프로젝트 `CLAUDE.md` "Opus 5 verification note" 라벨 → 모델 중립
+- [x] ⑦ `kcab_adm/WORKFLOW_ORCHESTRATION.md` § Verification → 템플릿과 동일 조건부(사용자 승인, 해당 레포 별도 커밋)
+- [x] 검증: 개념어 grep(`Fable|Opus|verifier|self-critique|fresh-context`) 전 표면 + 단일 모델 재평가 꼬리 잔존 0 확인
+- [x] 커밋: dotfiles / 이 프로젝트 / kcab_adm 레포별 분리. push는 명시 승인 후
+
+### Review
+
+- 7개 표면 모두 조건부 구조로 전환 완료. 검증 grep: 단일 모델 재평가 꼬리("moves off X 5") 잔존 0건; 개념어 스윕(Fable/Opus/self-critique/fresh-context)이 편집 표면에서만 히트 — 누락 없음. Opus 5 가이드 인용 4개 절 실재 WebFetch 재확인(2026-08-12). 문서 전용 변경으로 테스트 스위트 비대상.
