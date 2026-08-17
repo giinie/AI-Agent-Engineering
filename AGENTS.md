@@ -27,7 +27,7 @@ uv run pytest tests/ -q
 uv run pytest tests/evaluation/test_ai_judge.py -v
 
 # Run a single test by name
-uv run pytest tests/evaluation/test_ai_judge.py::TestAIJudge::test_specific_method -v
+uv run pytest tests/evaluation/test_ai_judge.py::test_add_metric -v
 
 # Add a new dependency (auto-updates pyproject.toml + uv.lock)
 uv add <package>
@@ -113,7 +113,7 @@ The local `.mcp.json` points at the JetBrains IDE plugin's local SSE endpoint (`
 
 ## References
 
-- `project.md` — exhaustive file-by-file map (Korean). Use as a lookup table when locating functionality.
+- `project.md` — file-by-file map (Korean), covering `src/` and `tests/` only — the Korean-edition chapter layout `ch02/`–`ch12/` is not included. Use as a lookup table when locating functionality under `src/`.
 - `src/common/evaluation/README_Evaluations.md` — evaluation framework usage.
 - Korean repo: https://github.com/TeeDDub/AI-Agent-Engineering
 - Original (English): https://github.com/michaelalbada/BuildingApplicationsWithAIAgents
