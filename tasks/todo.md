@@ -128,3 +128,16 @@
 ### Review
 
 - 7개 표면 모두 조건부 구조로 전환 완료. 검증 grep: 단일 모델 재평가 꼬리("moves off X 5") 잔존 0건; 개념어 스윕(Fable/Opus/self-critique/fresh-context)이 편집 표면에서만 히트 — 누락 없음. Opus 5 가이드 인용 4개 절 실재 WebFetch 재확인(2026-08-12). 문서 전용 변경으로 테스트 스위트 비대상.
+
+---
+
+## Windows 머신 후속 확인 — 2026-08-17 전수 감사 Area 5 이월 (2026-08-17)
+
+**배경**: gi-harness-audit 전수 감사(macOS에서 실행, CC 2.1.233)의 Area 5가 원리적으로 macOS에서 검증 불가능한 항목 4건을 식별. 다음 **Windows 세션**에서 확인 필요. 이번에 push된 dotfiles(`517894f..d19385a`)를 먼저 pull하면 템플릿 수렴분도 함께 도착함.
+
+### Checklist
+
+- [ ] **훅 4종 실동작** — Windows 세션 시작 후 `~/.claude/logs/instructions-loaded.jsonl` mtime이 갱신되는지 확인 (Git Bash의 MSYS 경로 변환이 native `node.exe`에 올바르게 전달되는지의 대리 지표)
+- [ ] **`bash-guardrail.cjs` Layer 2** — `process.platform === 'win32'` 분기의 `sed -i` / `grep -P` deny가 실제 발화하는지 확인 (macOS에서는 실행 자체 불가)
+- [ ] **statusLine 렌더** — HUD가 정상 표시되는지 확인 (Git Bash 부재 시 PowerShell 폴백에서 `${VAR:-default}` 확장이 깨지는 케이스는 `ENV_COMPATIBILITY.md` 문서화됨)
+- [ ] **`.git/hooks/pre-commit` shim 설치 여부** — `.git/`은 동기화되지 않아 머신마다 별도 설치 필요. 미설치면 secret 게이트가 그 머신에서 통째로 비활성. 확인/설치 명령은 `~/.claude/scripts/pre-commit.sh` 헤더 참조 (macOS 쪽은 설치 확인됨)
