@@ -37,6 +37,6 @@ The split exists so other coding agents (Codex, amp) can read the project core d
 
 ### Mandatory Reading
 
-- `WORKFLOW_ORCHESTRATION.md` — auto-loaded via the `### Rules` import. Key items the agent must honor: subagent gating (spawn only for context isolation), the recall-before-proposing gate for audit/review tasks (list the area's auto-memory directory and open the relevant topic-file bodies before building findings — do not filter by filename prefix), verification before completion, and the project-scope code-quality priority (see `AGENTS.md` § Code Quality).
+- `WORKFLOW_ORCHESTRATION.md` — auto-loaded via the `### Rules` import. Key items the agent must honor: subagent gating (spawn only for context isolation), the recall-before-proposing gate for audit/review tasks (list the area's auto-memory directory and open the relevant topic-file bodies before building findings — do not filter by filename prefix), verification before completion (run the real verification a change needs, without layering an extra self-review pass on top), and the project-scope code-quality priority (see `AGENTS.md` § Code Quality).
 - `tasks/lessons.md` — read at session start; apply non-obvious project patterns recorded there.
 - `tasks/todo.md` — append checkable plan items here for cross-file or architectural changes before implementing.
