@@ -50,23 +50,6 @@ AI 에이전트 엔지니어링의 실습 코드베이스입니다. 7개 이상�
 
 ---
 
-## 📁 ch01/ - 챕터 1 학습 코드
-
-### `ch01/1-1.py`
-- **목적**: LangGraph 기반 이커머스 지원 에이전트 기본 예제
-- **주요 기능**:
-  - `cancel_order` 도구 정의 (주문 취소)
-  - `call_model` 함수: LLM 호출, 도구 실행, 최종 응답 생성
-  - `StateGraph` 구성: 대화형 에이전트 그래프 정의
-- **특징**:
-  - 시스템 프롬프트로 에이전트 역할 정의
-  - 도구 호출 감지 및 실행
-  - 2단계 LLM 패스 (도구 호출 → 최종 응답)
-- **실행 예제**: 주문 A12345 취소 요청 처리
-- **모델**: gpt-5 사용 (temperature=0)
-
----
-
 ## 📁 src/ - 소스 코드 메인 디렉토리
 
 ### `src/__init__.py`
@@ -625,7 +608,7 @@ cp .env.example .env
 
 ### 2. 간단한 에이전트 실행
 ```bash
-uv run python ch01/1-1.py
+uv run python ch02/simple_customer_support_agent.py
 ```
 
 ### 3. 특정 도메인 에이전트 실행
@@ -648,7 +631,7 @@ docker-compose up -d
 
 ### 6. 테스트 실행
 ```bash
-uv run pytest -q
+uv run pytest tests/ -q
 ```
 
 ---
@@ -656,7 +639,7 @@ uv run pytest -q
 ## 📖 학습 경로
 
 ### 초급 (1-2주)
-1. `ch01/1-1.py` - 기본 에이전트 구조 이해
+1. `ch02/simple_customer_support_agent.py` - 기본 에이전트 구조 이해
 2. `README.md` - 프로젝트 전체 개요
 3. 단일 도메인 에이전트 실행 및 분석
 
