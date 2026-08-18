@@ -137,7 +137,14 @@
 
 ### Checklist
 
-- [ ] **훅 4종 실동작** — Windows 세션 시작 후 `~/.claude/logs/instructions-loaded.jsonl` mtime이 갱신되는지 확인 (Git Bash의 MSYS 경로 변환이 native `node.exe`에 올바르게 전달되는지의 대리 지표)
-- [ ] **`bash-guardrail.cjs` Layer 2** — `process.platform === 'win32'` 분기의 `sed -i` / `grep -P` deny가 실제 발화하는지 확인 (macOS에서는 실행 자체 불가)
-- [ ] **statusLine 렌더** — HUD가 정상 표시되는지 확인 (Git Bash 부재 시 PowerShell 폴백에서 `${VAR:-default}` 확장이 깨지는 케이스는 `ENV_COMPATIBILITY.md` 문서화됨)
-- [ ] **`.git/hooks/pre-commit` shim 설치 여부** — `.git/`은 동기화되지 않아 머신마다 별도 설치 필요. 미설치면 secret 게이트가 그 머신에서 통째로 비활성. 확인/설치 명령은 `~/.claude/scripts/pre-commit.sh` 헤더 참조 (macOS 쪽은 설치 확인됨)
+- [x] **훅 4종 실동작** — Windows 세션 시작 후 `~/.claude/logs/instructions-loaded.jsonl` mtime이 갱신되는지 확인 (Git Bash의 MSYS 경로 변환이 native `node.exe`에 올바르게 전달되는지의 대리 지표)
+- [x] **`bash-guardrail.cjs` Layer 2** — `process.platform === 'win32'` 분기의 `sed -i` / `grep -P` deny가 실제 발화하는지 확인 (macOS에서는 실행 자체 불가)
+- [x] **statusLine 렌더** — HUD가 정상 표시되는지 확인 (Git Bash 부재 시 PowerShell 폴백에서 `${VAR:-default}` 확장이 깨지는 케이스는 `ENV_COMPATIBILITY.md` 문서화됨)
+- [x] **`.git/hooks/pre-commit` shim 설치 여부** — `.git/`은 동기화되지 않아 머신마다 별도 설치 필요. 미설치면 secret 게이트가 그 머신에서 통째로 비활성. 확인/설치 명령은 `~/.claude/scripts/pre-commit.sh` 헤더 참조 (macOS 쪽은 설치 확인됨)
+
+### Verification (2026-08-18, Windows, CC 2.1.234)
+
+- 훅 실동작: `instructions-loaded.jsonl` mtime 11:17 = 세션 시작 시각, 최신 엔트리의 session_id가 당일 세션과 일치 — MSYS 경로 변환 정상 전달 확인
+- Layer 2: 라이브 세션에서 `sed -i` 포함 명령이 실제 차단됨 + 패턴 비노출 dry-run 3분기(benign=allow, `sed -i`/`grep -P`=JSON `permissionDecision:"deny"`) 확인. 참고: exit 2가 아닌 exit 0 + JSON 출력 형식
+- statusLine: 프로젝트 `settings.local.json` 오버라이드(`node omc-hud.mjs`) 실행 → `[OMC] HUD v4.15.7` 렌더, exit 0
+- pre-commit shim: `~/.claude/.git/hooks/pre-commit` 존재(권장 shim 형식과 일치, 실행권한 있음), `core.hooksPath` 미설정(기본 경로 유효), 무스테이징 dry-run exit 0 — secret 게이트 이 머신에서 활성
