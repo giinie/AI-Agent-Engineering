@@ -23,16 +23,6 @@ uv run python ch02/simple_customer_support_agent.py
 # Expect 2 skips: the optional fine-tuning extra is absent, and one agent test is gated on the LangChain 1.0 migration.
 uv run pytest tests/ -q
 
-# Run a single test file
-uv run pytest tests/evaluation/test_ai_judge.py -v
-
-# Run a single test by name
-uv run pytest tests/evaluation/test_ai_judge.py::test_add_metric -v
-
-# Add a new dependency (auto-updates pyproject.toml + uv.lock)
-uv add <package>
-uv add --dev <package>
-
 # Optional: install fine-tuning extras (heavy: torch, transformers, peft, trl, bitsandbytes, datasets)
 uv sync --extra fine-tuning
 
