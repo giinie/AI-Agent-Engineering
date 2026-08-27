@@ -103,7 +103,7 @@ The local `.mcp.json` points at the JetBrains IDE plugin's local SSE endpoint (`
 
 ## References
 
-- `project.md` — file-by-file map (Korean), covering `src/` and `tests/` only — the Korean-edition chapter layout `ch02/`–`ch12/` is not included. Use as a lookup table when locating functionality under `src/`.
+- `project.md` — file-by-file map (Korean), covering root-level files, `src/`, and `tests/` — the Korean-edition chapter layout `ch02/`–`ch12/` is not included. Use as a lookup table when locating functionality under `src/`.
 - `src/common/evaluation/README_Evaluations.md` — evaluation framework usage.
 - Korean repo: https://github.com/TeeDDub/AI-Agent-Engineering
 - Original (English): https://github.com/michaelalbada/BuildingApplicationsWithAIAgents
