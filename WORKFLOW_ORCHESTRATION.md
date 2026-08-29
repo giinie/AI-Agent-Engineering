@@ -50,7 +50,7 @@ config / instruction docs:
 - Spawn subagents **only when context isolation is explicitly needed**:
   - Parallel independent analysis (e.g., reviewing multiple modules simultaneously)
   - Research/exploration that would pollute the main context window
-  - Adversarial review — **security-sensitive changes only** (auth / JWT / refresh token / CORS / rate-limit, where the Skill Policy already makes review MANDATORY): one subagent implements, a separate reviewer subagent critiques. Outside that carve-out, do NOT use a subagent to verify or double-check your own work — see § Verification
+  - Adversarial review — **security-sensitive changes only**, meaning the triggers listed under Skill Policy in `CLAUDE.md`, where review is already MANDATORY (that list lives there, not here): one subagent implements, a separate reviewer subagent critiques. Outside that carve-out, do NOT use a subagent to verify or double-check your own work — see § Verification
 - One focused task per subagent — never multiplex unrelated concerns in a single subagent
 - Do NOT spawn subagents for simple sequential tasks; keep the main context clean instead
 - Prefer 2–3 targeted subagents over large swarms — you cannot effectively observe 10+ agents
@@ -64,9 +64,8 @@ A gi-forge story file is an **engine-neutral handoff contract**; the
 implementation step is routable per story (Claude / codex / amp) — Claude
 decides the route, and **verification and deploy always stay in Claude**.
 Safety-critical constants regardless of route: security-sensitive stories
-(auth/JWT/refresh/CORS/rate-limit) are never delegated blindly (review is
-MANDATORY per project Skill Policy), and **push requires explicit approval
-every time**.
+(the Skill Policy triggers in `CLAUDE.md`) are never delegated blindly (review
+is MANDATORY there), and **push requires explicit approval every time**.
 
 Full routing criteria, delegation prompt wording, sandbox traps, and Claude's
 verify-and-close duties: invoke the **`external-engine-handoff` skill**
