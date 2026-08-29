@@ -32,7 +32,7 @@ The split exists so other coding agents (Codex, amp) can read the project core d
 
 - **Engine-independent facts** (project context, build/test commands, architecture, gotchas, the code-quality priority) → `AGENTS.md` **only**.
 - **Claude/OMC runtime instructions** (skill routing, hooks, the recall-before-proposing gate, subagent gating, delegation policy) → this `CLAUDE.md` overlay (or `WORKFLOW_ORCHESTRATION.md`) **only**.
-- `WORKFLOW_ORCHESTRATION.md` is **shared workflow policy**, not a Claude/OMC-only bucket: it mixes engine-independent rules (Planning, Task Execution, Bug Fixing, Code Quality) with Claude/OMC-specific ones (the recall gate, subagent gating, the model-conditional verification note). `AGENTS.md` may reference it — that is not a boundary violation.
+- `WORKFLOW_ORCHESTRATION.md` is **shared workflow policy**, not a Claude/OMC-only bucket. It holds how-we-work rules (planning, verification, subagent gating, the recall gate, code quality) rather than project facts, and it is written to be readable by whatever agent is running — some passages may name a specific engine or model, and that is a detail of the rule, not a change of ownership. `AGENTS.md` may reference it — that is not a boundary violation.
 - When auditing instruction docs, check all four surfaces: (1) `AGENTS.md` content, (2) this overlay's content, (3) the `AGENTS.md` import link is live, (4) no engine-independent fact has leaked into the overlay and no Claude/OMC instruction has leaked into `AGENTS.md`.
 
 ### Mandatory Reading
