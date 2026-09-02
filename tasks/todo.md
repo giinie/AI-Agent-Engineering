@@ -148,3 +148,14 @@
 - Layer 2: 라이브 세션에서 `sed -i` 포함 명령이 실제 차단됨 + 패턴 비노출 dry-run 3분기(benign=allow, `sed -i`/`grep -P`=JSON `permissionDecision:"deny"`) 확인. 참고: exit 2가 아닌 exit 0 + JSON 출력 형식
 - statusLine: 프로젝트 `settings.local.json` 오버라이드(`node omc-hud.mjs`) 실행 → `[OMC] HUD v4.15.7` 렌더, exit 0
 - pre-commit shim: `~/.claude/.git/hooks/pre-commit` 존재(권장 shim 형식과 일치, 실행권한 있음), `core.hooksPath` 미설정(기본 경로 유효), 무스테이징 dry-run exit 0 — secret 게이트 이 머신에서 활성
+
+## 2026-09-02 — AI-native SDLC 플레이북 반영 (후보 2건)
+
+출처: https://claude.com/blog/the-ai-native-sdlc-playbook — 6단계 매핑 결과 개인 하네스에 신규로 가치 있는 항목은 Stage 4a(테스트 잠금 훅)·4b(구성 회귀 eval) 2건.
+
+- [x] **후보 1 — 버그픽스 테스트 잠금(hookify)**: `.claude/hookify.lock-tests-edit.local.md`(file 이벤트) + `.claude/hookify.lock-tests-bash.local.md`(bash 이벤트), `action: block`. 켜져 있으면 `tests/**/*.py`와 잠금 규칙 파일 자체를 Edit/Write/셸 쓰기로부터 보호. 기본 `enabled: false`, 픽스 작업 시작 시 사용자가 켬. scratch 시뮬레이션 18/18 통과.
+- [x] `.gitignore`에 `.claude/*.local.md` 추가(규칙 파일은 개인용·미추적).
+- [ ] **후보 2 — `claude plugin eval` 기반 gi-forge 회귀 eval**: **보류(계정 게이트)**. CLI는 2.1.258에 실재하고 도움말이 스킬 디렉터리 대상을 명시("installed and skills-dir plugins both resolve")하나, `init --bare`·실행 모두 "`plugin eval` is currently in early access"만 출력. env·settings.json·플래그·code.claude.com 문서 어디에도 활성화 경로 없음 → 계정 측 게이트. 재개 트리거: 게이트가 열리면(같은 명령이 파일을 생성하면) `~/.claude/skills/gi-forge/evals/`에 story-validation 매설 결함 케이스부터 작성. grader 유형: regex·tool_used·tool_order·file_exists·llm·baseline.
+
+### Review
+- 첫 규칙 파일을 `enabled: true`로 만들자 즉시 발화해 두 번째 규칙 파일 생성과 자체 토글을 막음 — 자기 보호가 설계대로 작동한 실증이자 부트스트랩 함정(lessons 참조). 해제는 사용자 셸(`!` 접두)로만 가능.

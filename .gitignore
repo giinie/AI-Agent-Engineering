@@ -103,6 +103,7 @@ ragtest/
 
 # env for AI
 .claude/settings.local.json
+.claude/*.local.md
 .mcp.json
 !.mcp.json.example
 
