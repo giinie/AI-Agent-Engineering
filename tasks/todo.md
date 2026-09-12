@@ -155,7 +155,7 @@
 
 - [x] **후보 1 — 버그픽스 테스트 잠금(hookify)**: `.claude/hookify.lock-tests-edit.local.md`(file 이벤트) + `.claude/hookify.lock-tests-bash.local.md`(bash 이벤트), `action: block`. 켜져 있으면 `tests/**/*.py`와 잠금 규칙 파일 자체를 Edit/Write/셸 쓰기로부터 보호. 기본 `enabled: false`, 픽스 작업 시작 시 사용자가 켬. scratch 시뮬레이션 18/18 통과.
 - [x] `.gitignore`에 `.claude/*.local.md` 추가(규칙 파일은 개인용·미추적).
-- [ ] **후보 2 — `claude plugin eval` 기반 gi-forge 회귀 eval**: **보류(계정 게이트)**. CLI는 2.1.258에 실재하고 도움말이 스킬 디렉터리 대상을 명시("installed and skills-dir plugins both resolve")하나, `init --bare`·실행 모두 "`plugin eval` is currently in early access"만 출력. env·settings.json·플래그·code.claude.com 문서 어디에도 활성화 경로 없음 → 계정 측 게이트. 재개 트리거: 게이트가 열리면(같은 명령이 파일을 생성하면) `~/.claude/skills/gi-forge/evals/`에 story-validation 매설 결함 케이스부터 작성. grader 유형: regex·tool_used·tool_order·file_exists·llm·baseline.
+- [ ] **후보 2 — `claude plugin eval` 기반 gi-forge 회귀 eval**: **게이트 개방(2026-09-12, CC 2.1.269) — 재개 가능**. 2026-09-02에는 "early access"만 출력해 계정 게이트로 보류했으나, 2.1.269 changelog가 `claude plugin eval` 정식 추가를 기록하고 신규 문서 `plugin-evals` § Requirements가 "Claude Code v2.1.269 or later"를, § Troubleshooting이 그 메시지를 "Your build predates general availability"로 설명한다 — 빌드 버전 게이트였다. scratch 스킬 폴더에서 `claude plugin eval init --bare <case>`가 `evals/<case>/prompt.md` + `graders/criteria.md`를 실제 생성함(하네스 감사 실측). 다음 단계: `~/.claude/skills/gi-forge/evals/`에 story-validation 매설 결함 케이스부터 작성(grader 유형: regex·tool_used·tool_order·file_exists·llm·baseline). 실행은 사용량 과금·artifact publish 부작용이 있으니 별도 세션에서 `--no-publish --max-cost-usd`와 사용자 승인 후.
 
 ### Review
 - 첫 규칙 파일을 `enabled: true`로 만들자 즉시 발화해 두 번째 규칙 파일 생성과 자체 토글을 막음 — 자기 보호가 설계대로 작동한 실증이자 부트스트랩 함정(lessons 참조). 해제는 사용자 셸(`!` 접두)로만 가능.
