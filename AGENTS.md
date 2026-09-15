@@ -21,7 +21,8 @@ uv run python ch02/simple_customer_support_agent.py
 
 # Run the full test suite (the tests/ path is required from the repo root — see Project-Specific Gotchas).
 # Expect 2 skips: the optional fine-tuning extra is absent, and one agent test is gated on the LangChain 1.0 migration.
-# Requires a repo-root .env with OPENAI_API_KEY — without it 2 tests FAIL, not skip (see Project-Specific Gotchas).
+# Needs OPENAI_API_KEY exported in the shell (a repo-root .env does NOT reach pytest);
+# without it 2 tests FAIL rather than skip. See Project-Specific Gotchas.
 uv run pytest tests/ -q
 
 # Optional: install fine-tuning extras (heavy: torch, transformers, peft, trl, bitsandbytes, datasets)
@@ -41,7 +42,7 @@ cd src/common/observability && docker-compose up -d
 ### Environment
 
 - Python is **pinned to 3.12** (`>=3.12,<3.13` in `pyproject.toml`; venv runs CPython 3.12.11). Do not assume 3.13+ syntax/stdlib.
-- `.env` is required at the repo root with `OPENAI_API_KEY` (template: `.env.example`) — by the test suite as well as the examples (see Project-Specific Gotchas). Some examples additionally need `WOLFRAM_ALPHA_APP_ID`, `YOUR_SLACK_BOT_TOKEN`, or `TRACELOOP_API_KEY`. The `LANGCHAIN_*` block in `.env.example` is optional LangSmith tracing, off by default (`LANGCHAIN_TRACING_V2=false`) and read by no example — `langsmith` is only a transitive dependency.
+- `.env` is required at the repo root with `OPENAI_API_KEY` (template: `.env.example`) — read by the 28 example scripts that call `load_dotenv()` themselves. Nothing loads it for you, so the test suite is NOT covered by it (see Project-Specific Gotchas). Some examples additionally need `WOLFRAM_ALPHA_APP_ID`, `YOUR_SLACK_BOT_TOKEN`, or `TRACELOOP_API_KEY`. The `LANGCHAIN_*` block in `.env.example` is optional LangSmith tracing, off by default (`LANGCHAIN_TRACING_V2=false`) and read by no example — `langsmith` is only a transitive dependency.
 - WSL is recommended on Windows because some dependencies don't work on native Win32.
 
 ## Architecture — Big Picture
@@ -81,9 +82,10 @@ The repo has BOTH `pytest.ini` (only `filterwarnings`) and `[tool.pytest.ini_opt
 - Don't "fix" by deleting `pytest.ini` — its `filterwarnings` setting is intentional.
 
 ### Two `tests/` cases need a live `OPENAI_API_KEY`
-`tests/evaluation/test_ai_judge.py::test_weighted_score` and `::test_parse_weights` call `AIJudge()` with no argument, and `AIJudge.__init__` constructs a real `ChatOpenAI` — so both need `OPENAI_API_KEY` even though they only exercise the pure helpers `_weighted` / `_parse_weights`. Without a repo-root `.env` they fail with `openai.OpenAIError: The api_key client option must be set ...`, turning the documented `2 failed, 11 passed, 2 skipped` into the real result of `uv run pytest tests/ -q` (measured 2026-09-15).
+`tests/evaluation/test_ai_judge.py::test_weighted_score` and `::test_parse_weights` call `AIJudge()` with no argument, and `AIJudge.__init__` constructs a real `ChatOpenAI` — so both need `OPENAI_API_KEY` even though they only exercise the pure helpers `_weighted` / `_parse_weights` and never reach the network. Without it they fail with `openai.OpenAIError: The api_key client option must be set ...`, so `uv run pytest tests/ -q` really yields `2 failed, 11 passed, 2 skipped`.
+- **A repo-root `.env` does not help**: neither `conftest.py`, nor the tests, nor `src/common/evaluation/ai_judge.py` calls `load_dotenv()` — only the 28 standalone example scripts do. The variable must be in the environment. Measured 2026-09-15: `OPENAI_API_KEY=<any non-empty value> uv run pytest tests/ -q` → `13 passed, 2 skipped`. Any value works because these two tests never call the API.
 - The sibling cases in the same file pass because they inject a `DummyLLM`; only these two skip that.
-- This is upstream example code (`3684fd7`), not a local regression — fix it by supplying `.env`, not by editing the tests, unless the test-design change is asked for.
+- This is upstream example code (`3684fd7`), not a local regression — supply the variable rather than editing the tests, unless the test-design change is asked for.
 
 ### Duplicate dev dependency declarations
 `pyproject.toml` declares dev dependencies in **both** `[project.optional-dependencies] dev` (PEP 631, for `pip install -e .[dev]` callers) and `[dependency-groups] dev` (PEP 735, uv-canonical). Content is identical and must be kept in sync manually when adding/removing dev tools — `uv add --dev <pkg>` only updates the `[dependency-groups]` block. Migration from the legacy `[tool.uv].dev-dependencies` form was completed in commit `060ccd0`; don't reintroduce that section.
