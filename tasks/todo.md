@@ -4,7 +4,8 @@
 
 **배경**: gi-forge story 산출물을 Codex/amp에 구현 핸드오프하고 Claude로 검증/배포하는 워크플로우를 위해, 구현 엔진이 못 읽는 프로젝트 핵심 컨텍스트(commands/gotchas/architecture)를 엔진 독립 `AGENTS.md`로 분리. 공식 문서(code.claude.com/docs/en/memory § AGENTS.md) 확인: **Claude Code는 AGENTS.md를 네이티브로 안 읽음 → `@AGENTS.md` import가 정답**(이중 로드 없음). Windows는 symlink 대신 import 사용(문서 명시).
 
-**구조 (사용자 확정)**: AGENTS.md = 엔진 독립 정본 코어 / CLAUDE.md = `@AGENTS.md` + Claude·OMC 오버레이. 복사 ❌ import ⭕ (repo 내 중복 0).
+**구조 (사용자 확정)**: AGENTS.md = 엔진 독립 정본 코어 / CLAUDE.md = `@AGENTS.md` + Claude 오버레이. 복사 ❌ import ⭕ (repo 내 중복 0).
+> 2026-09-21 갱신: 확정 당시 오버레이는 "Claude·OMC" 2종이었으나 oh-my-claudecode가 사용자 스코프에서 제거(Mac 09-18 / Windows 09-21)되어 OMC 축은 소멸. 구조 자체는 그대로 유효.
 
 ### Checklist
 
@@ -25,7 +26,7 @@
 
 ### Review
 
-**변경 요약**: gi-forge story → Codex/amp 구현 핸드오프 → Claude 검증 워크플로우의 기반으로, 프로젝트 핵심 컨텍스트를 엔진 독립 `AGENTS.md`로 분리. `CLAUDE.md`는 `@AGENTS.md` import + Claude/OMC 오버레이로 축소(148→41줄). 공식 문서가 권장하는 정확한 패턴(Claude는 AGENTS.md 미독 → `@import`).
+**변경 요약**: gi-forge story → Codex/amp 구현 핸드오프 → Claude 검증 워크플로우의 기반으로, 프로젝트 핵심 컨텍스트를 엔진 독립 `AGENTS.md`로 분리. `CLAUDE.md`는 `@AGENTS.md` import + Claude/OMC 오버레이로 축소(148→41줄, 당시 기준 — OMC 축은 2026-09-18/21 제거). 공식 문서가 권장하는 정확한 패턴(Claude는 AGENTS.md 미독 → `@import`).
 
 **drift 방지**: repo 내 공유 코어 단일본(중복 0). doc-sync/감사 규칙을 **확장**(AGENTS.md 추가 + CLAUDE.md 유지, 둘 다)하고, 분할이 만든 새 감사 차원(import 링크·경계 정합) 4표면을 `### Instruction File Boundary`에 명문화.
 
@@ -146,7 +147,7 @@
 
 - 훅 실동작: `instructions-loaded.jsonl` mtime 11:17 = 세션 시작 시각, 최신 엔트리의 session_id가 당일 세션과 일치 — MSYS 경로 변환 정상 전달 확인
 - Layer 2: 라이브 세션에서 `sed -i` 포함 명령이 실제 차단됨 + 패턴 비노출 dry-run 3분기(benign=allow, `sed -i`/`grep -P`=JSON `permissionDecision:"deny"`) 확인. 참고: exit 2가 아닌 exit 0 + JSON 출력 형식
-- statusLine: 프로젝트 `settings.local.json` 오버라이드(`node omc-hud.mjs`) 실행 → `[OMC] HUD v4.15.7` 렌더, exit 0
+- statusLine: 프로젝트 `settings.local.json` 오버라이드(`node omc-hud.mjs`) 실행 → `[OMC] HUD v4.15.7` 렌더, exit 0 — **무효(2026-09-21)**: OMC 제거로 오버라이드·`hud/` 모두 삭제, 이제 유저 스코프 `~/.claude/scripts/statusline.cjs` 단일 경로
 - pre-commit shim: `~/.claude/.git/hooks/pre-commit` 존재(권장 shim 형식과 일치, 실행권한 있음), `core.hooksPath` 미설정(기본 경로 유효), 무스테이징 dry-run exit 0 — secret 게이트 이 머신에서 활성
 
 ## 2026-09-02 — AI-native SDLC 플레이북 반영 (후보 2건)
