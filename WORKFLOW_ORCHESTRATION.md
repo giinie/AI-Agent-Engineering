@@ -55,8 +55,6 @@ config / instruction docs:
 - Do NOT spawn subagents for simple sequential tasks; keep the main context clean instead
 - Prefer 2–3 targeted subagents over large swarms — you cannot effectively observe 10+ agents
 - **Targeted search → direct tools first**: For known file paths, specific patterns, or directory exploration, use Glob/Grep/Read directly. Explore subagents are for broad, open-ended codebase questions only.
-- **Subagent gate failure**: Explore agents may return empty results due to plugin skill gate conflicts (e.g., a hook printing `SUBAGENT-STOP` or `EXTREMELY-IMPORTANT` markers in place of search results). If an agent returns gate-check output instead of actual results, switch to direct tools immediately — do not retry the same agent. (The original `superpowers` plugin that produced this exact pattern is no longer installed at user scope, but the same anti-pattern can recur with any future gate plugin.)
-- **Esc+Esc interrupt vs permission denial**: When a user interrupts a running Agent with Esc double-tap, Claude Code reports `"The user doesn't want to proceed"` — identical to a permission denial. Do not assume a hook or permission system blocked the call. Agent tool calls are auto-approved and do not show approval prompts.
 
 ## External-Engine Implementation Handoff
 
@@ -74,22 +72,17 @@ delegating any story to codex/amp.
 
 ## Task Execution
 - Track progress by marking items complete in `tasks/todo.md` as you go
-- Give a brief progress update when you find something important or change direction, and lead with the outcome — do not narrate every step
 - Add a review section to `tasks/todo.md` when the task is complete
 
 ## Verification
-- Never mark a task complete without proving it works
-- Run tests, check logs, and demonstrate correctness before reporting done
-- When relevant, diff behavior between main branch and your changes
+- Verify with the repo's real checks — `uv run pytest tests/ -q` and the other commands in `AGENTS.md` § Common Commands — and report their actual output
 - For a long-running or unattended task, set the completion check as a `/goal` condition instead of only asserting it at the end — a separate evaluator re-checks it after every turn (`/best-practices` § "Give Claude a way to verify its work", the *across a session* lever). The Stop-hook lever from that same list is deliberately NOT used in this repo: a repo-wide `pytest` gate breaks on the `ch07` collection gotcha, so hook-based automation stays ruff-only (see `tasks/lessons.md`)
-- Do NOT layer a reflexive self-review or verifier pass on top of the above for routine work. This is model-conditional for the models main switches between (identify the active model from the session — the system prompt's Environment section goes stale after a mid-session `/model` switch, so confirm it the way `~/.claude/CLAUDE.md` § Model Alignment prescribes): Fable 5.1, Opus 5.5 and Sonnet 5 all verify their own work without prompting (Fable family: Claude Code `model-config` doc § "Work with Fable" — they "verify their work more often than smaller models"; Opus 5 guide § "Task scope and over-verification", § "Self-correction", which the Opus 5.5 guide keeps as "a reasonable starting point"; Sonnet 5 guide § "Tool use triggering" — it "will reach for tools and run self-verification loops more readily"). No current guide has a fresh-context-verifier carve-out for long-running autonomous work (the retired Fable 5 guide's § "Recommended scaffolding changes" did — do not carry it over). Real verification — actually running the tests/commands and reporting the results — is unaffected. Re-evaluate on any model outside these three
+- Do NOT layer a reflexive self-review or verifier pass on top of that for routine work. This is model-conditional for the models main switches between (identify the active model from the session — the system prompt's Environment section goes stale after a mid-session `/model` switch, so confirm it the way `~/.claude/CLAUDE.md` § Model Alignment prescribes): Fable 5.1, Opus 5.5 and Sonnet 5 all verify their own work without prompting (Fable family: Claude Code `model-config` doc § "Work with Fable" — they "verify their work more often than smaller models"; Opus 5 guide § "Task scope and over-verification", § "Self-correction", which the Opus 5.5 guide keeps as "a reasonable starting point"; Sonnet 5 guide § "Tool use triggering" — it "will reach for tools and run self-verification loops more readily"). Real verification — actually running the tests/commands and reporting the results — is unaffected. Re-evaluate on any model outside these three
 
 ## Bug Fixing
 - When given a bug report: just fix it — no hand-holding required for localized fixes.
 - If the fix requires cross-file changes or architectural decisions, escalate to Planning first.
-- Point at logs, errors, and failing tests, then resolve them autonomously
 - Fix failing CI tests without waiting to be told how
-- Zero context switching required from the user
 
 ## Lessons & Self-Improvement
 
@@ -106,9 +99,4 @@ delegating any story to codex/amp.
 > This section adds project-specific deltas only — do not restate user-scope rules.
 
 - No temporary fixes — find and address root causes
-- After a non-trivial change, ask once about **code just written in this session**:
-  "Is there a more elegant solution?" — If yes and low-risk, refactor. Else ship.
-- Elegance checks do NOT apply to:
-  - Simple, obvious fixes (no over-engineering)
-  - Pre-existing code (follows the user-scope Surgical Changes rule)
 - See also: Bug Fixing
