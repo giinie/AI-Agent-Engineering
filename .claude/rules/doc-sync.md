@@ -22,7 +22,7 @@ paths:
 
 # Doc-sync audit triggers
 
-Moved out of `CLAUDE.md` § Skill Policy so the trigger list loads only when a matching file is read. The directory-membership trigger stays eager in `CLAUDE.md`, because creating a file in a new directory reads nothing that would load this rule.
+The directory-membership trigger lives in `CLAUDE.md` instead, because creating a file in a new directory reads nothing that would load this rule.
 
 - Audit `AGENTS.md`'s **Project-Specific Gotchas** after edits to `pyproject.toml`, `pytest.ini`, `.mcp.json`, `conftest.py`, `src/__init__.py`, `src/common/evaluation/ai_judge.py`, or `tests/evaluation/test_ai_judge.py` — those files contain the current-state facts the Gotchas section quotes, and silent drift between them caused commit `060ccd0`'s gotcha staleness. The last two carry the `OPENAI_API_KEY` Gotcha's facts (`AIJudge.__init__` constructing a real `ChatOpenAI`; two cases calling `AIJudge()` without a `DummyLLM`), so injecting a stub there or adding `load_dotenv()` to the module silently falsifies it.
 - Audit the path-scoped rules in `.claude/rules/` (fine-tuning, mcp-server-copies, observability) after edits under `ch07/`, `src/fine_tuning/`, `ch04/mcp_servers/`, `src/common/mcp/`, or `src/common/observability/`.

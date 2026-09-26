@@ -16,8 +16,7 @@
 
 ## Recall Before Proposing (Audit / Review Gate)
 
-> Promoted 2026-06-16 after repeated re-raises of already-settled decisions
-> (statusLine false-positive ×2, env-deny widening). Auto-memory is advisory
+> Settled decisions get re-raised unless recalled first. Auto-memory is advisory
 > context, not enforcement — and session start injects only the `MEMORY.md`
 > index line, NOT topic-file bodies. The body must be opened deliberately.
 

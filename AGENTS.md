@@ -73,7 +73,7 @@ The two layouts overlap intentionally for pedagogical reasons. When asked to mod
 
 ### Test import path: bare `common.*` imports resolved via root `conftest.py`
 Tests import the cross-cutting modules with the bare `from common.evaluation.ai_judge import AIJudge` style, but those packages live under `src/`, which hatchling installs as `src.common.*` (`packages = ["src"]`) — so `common` is not importable from a headless `uv run pytest`. The repo-root `conftest.py` does `sys.path.insert(0, str(Path(__file__).parent / "src"))` so the bare imports resolve.
-- Before this `conftest.py` existed, `uv run pytest` failed with `ModuleNotFoundError: No module named 'common'`; the import style only worked via IDE source-root injection (`.idea/` config + JetBrains MCP bridge in `.mcp.json`).
+- Without it, `uv run pytest` fails with `ModuleNotFoundError: No module named 'common'`; IDEs resolve the imports independently via source-root injection (`.idea/` config).
 - Keep the bare `from common...` imports as-is — the root `conftest.py` is the chosen fix; do **not** rewrite them to `from src.common...`.
 
 ### `pytest.ini` overrides `pyproject.toml` test config
