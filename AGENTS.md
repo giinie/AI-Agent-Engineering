@@ -88,7 +88,7 @@ The repo has BOTH `pytest.ini` (only `filterwarnings`) and `[tool.pytest.ini_opt
 - This is upstream example code (`3684fd7`), not a local regression — supply the variable rather than editing the tests, unless the test-design change is asked for.
 
 ### Duplicate dev dependency declarations
-`pyproject.toml` declares dev dependencies in **both** `[project.optional-dependencies] dev` (PEP 631, for `pip install -e .[dev]` callers) and `[dependency-groups] dev` (PEP 735, uv-canonical). Content is identical and must be kept in sync manually when adding/removing dev tools — `uv add --dev <pkg>` only updates the `[dependency-groups]` block. Migration from the legacy `[tool.uv].dev-dependencies` form was completed in commit `060ccd0`; don't reintroduce that section.
+`pyproject.toml` declares dev dependencies in **both** `[project.optional-dependencies] dev` (PEP 631, for `pip install -e .[dev]` callers) and `[dependency-groups] dev` (PEP 735, uv-canonical). Content is identical and must be kept in sync manually when adding/removing dev tools — `uv add --dev <pkg>` only updates the `[dependency-groups]` block. Don't reintroduce the legacy `[tool.uv].dev-dependencies` section.
 
 ### `src/__init__.py` exists
 `src/` is a Python package, not a source root. The bare-`common` import style works headlessly because the repo-root `conftest.py` puts `src/` on `sys.path` (see "Test import path" above); IDEs additionally inject it via `.idea/` source roots.
