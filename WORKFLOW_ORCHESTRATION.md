@@ -9,7 +9,7 @@
 - Write the plan to `tasks/todo.md` with checkable items before implementing
 - Check official documentation for platform-feature limits (Team, Agent, MCP, etc.) before designing around them — experimental features change most. Use `context7` MCP for SDK/framework docs (per `~/.claude/MCP_ROUTING.md` §3 Tie-Breaking).
 - Check in with the user before starting implementation on non-trivial plans
-- If execution goes sideways, STOP and re-plan — do not keep pushing forward
+- If execution goes sideways, stop and re-plan rather than pushing forward
 - When the session is in "work without stopping for clarifying questions" mode (set via system reminder or explicit user instruction):
   - Record the assumption inline in the response, then proceed
   - **Irreversible actions still require explicit confirmation**: DB schema migrations, network calls with external side effects, destructive shell commands (`rm -rf`, `git reset --hard`, `git push --force`), production/staging deploys, secret/credential changes
