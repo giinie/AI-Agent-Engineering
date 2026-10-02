@@ -81,7 +81,7 @@ delegating any story to codex/amp.
 ## Bug Fixing
 - When given a bug report: just fix it — no hand-holding required for localized fixes.
 - If the fix requires cross-file changes or architectural decisions, escalate to Planning first.
-- Fix failing CI tests without waiting to be told how
+- Fix failing tests without waiting to be told how
 
 ## Lessons & Self-Improvement
 
