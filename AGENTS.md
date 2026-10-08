@@ -63,7 +63,7 @@ The two layouts overlap intentionally for pedagogical reasons. When asked to mod
 ### `src/` module structure (cross-cutting concerns)
 
 - `src/frameworks/langgraph_agents/<domain>/` — **7 production-style domain agents** (ecommerce, financial_services, healthcare, it_helpdesk, legal, soc, supply_chain). Each domain pairs an agent file with a JSONL evaluation set under `src/common/evaluation/scenarios/`.
-- `src/fine_tuning/` — SFT, DPO, RLVR scripts. Training data in `training_data/*.jsonl`. Output checkpoints land under `ch07/fine_tuned_model/` (gitignored).
+- `src/fine_tuning/` — SFT, DPO, RLVR scripts. Training data in `training_data/*.jsonl`. The SFT/DPO scripts here write checkpoints to working-directory-relative dirs (`phi3-mini-helpdesk-dpo/`, `gemma-2-2B-function-call-ft/`), which are NOT gitignored; only the `ch07/` copies write under `ch07/fine_tuned_model/` (gitignored).
 
 `notebook/chNN_*.ipynb` (ch02–ch12) — Colab-friendly versions (Traceloop/Loki removed; ch03 won't run in Colab; ch08 distributed variants need extra infra).
 
