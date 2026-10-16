@@ -8,7 +8,7 @@
 - Enter plan mode for **cross-file changes or architectural decisions** — not every multi-step task
 - Write the plan to `tasks/todo.md` with checkable items before implementing
 - Check official documentation for platform-feature limits (Team, Agent, MCP, etc.) before designing around them — experimental features change most. Use `context7` MCP for SDK/framework docs (per `~/.claude/MCP_ROUTING.md` §3 Tie-Breaking).
-- Check in with the user before starting implementation on non-trivial plans
+- Check in with the user before implementing a plan that meets the plan-mode trigger above (cross-file or architectural)
 - If execution goes sideways, stop and re-plan rather than pushing forward
 - When the session is in "work without stopping for clarifying questions" mode (set via system reminder or explicit user instruction):
   - Record the assumption inline in the response, then proceed
