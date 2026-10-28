@@ -174,7 +174,7 @@
 - [x] 1. 로컬 스킬 `~/.claude/skills/sync-docs/SKILL.md` 신규(이름 유지). 1차 증거: git diff 범위 + Grep(문서 속 경로·명령·심볼·버전 대조, 삭제/개명 export 추적, CHANGELOG 미기재 feat/fix). 판단 규칙·출력 블록은 업스트림 SKILL.md(MIT) 구조 차용·출처 고지.
 - [-] 2. (제외 — 사용자 결정, 로컬 스킬 고도화로 이월) 정밀 분석 단계(선택적): `agent-analyzer`가 PATH 또는 `~/.agent-sh/bin`에 있으면 `repo-intel init|update` → `query stale-docs`·`doc-drift`·`entry-points` 결과를 LOW certainty 리드로 병합. 없으면 `analyzer.available:false` + 사유로 축소 실행(오류 아님). 맵 위치는 `.git/` 밖 무추적 경로(예: `.claude/state/repo-intel.json`, gitignore 확인).
 - [-] 3. (제외) 바이너리 설치(사용자 승인 후, Windows): GitHub release v0.8.1 `x86_64-pc-windows-msvc.zip` + `.sha256` 대조 → `~/.agent-sh/bin/`. Mac은 `aarch64-apple-darwin` 별도 설치(동기화 대상 아님).
-- [x] 4. 플러그인 정리(Win 완료, Mac 대기): `claude plugin uninstall sync-docs@agentsys`(Win; Mac 별도), `settings.json` `"sync-docs@agentsys": true` 제거, `Skill(sync-docs)` 유지.
+- [x] 4. 플러그인 정리(Win·Mac 완료 — Mac은 2026-10-28 `/plugin` 마켓플레이스 제거 + `plugins/cache/agentsys` 수동 삭제, dotfiles `7cbefad`): `claude plugin uninstall sync-docs@agentsys`(Win), `settings.json` `"sync-docs@agentsys": true` 제거, `Skill(sync-docs)` 유지.
 - [x] 5. 참조 갱신 `sync-docs:sync-docs` → `sync-docs`: `SKILL_ROUTING.md:25,35`, `SKILL_ROUTING_DETAIL.md`(§ Documentation·Drift + Deprecated 이력 행), `gi-harness-bootstrap` templates/CLAUDE.md·README.md·references/team-sharing.md, 이 저장소 `CLAUDE.md:27`, `D:\JWS\AIAgent\todo\CLAUDE.md`.
 - [x] 6. 검증: 이 저장소에서 `/sync-docs report --scope=recent` 실행(분석기 유/무 두 경로), dotfiles·프로젝트 커밋(push는 별도 승인).
 
