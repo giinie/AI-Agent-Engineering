@@ -166,3 +166,18 @@
 
 ### Review
 - 첫 규칙 파일을 `enabled: true`로 만들자 즉시 발화해 두 번째 규칙 파일 생성과 자체 토글을 막음 — 자기 보호가 설계대로 작동한 실증이자 부트스트랩 함정(lessons 참조). 해제는 사용자 셸(`!` 접두)로만 가능.
+
+## 2026-10-28 sync-docs 대체 — 로컬 스킬 + agent-analyzer 정밀 분석
+
+배경: agentsys가 `sync-docs` 등 10종을 마켓플레이스에서 폐기(CHANGELOG [Unreleased] › Removed, 저장소 삭제 예정 → 업데이트 시 로드 오류). 공식 후속 없음. 정밀 분석 엔진 `agent-sh/agent-analyzer`(Rust, MIT, v0.8.1, 미아카이브)는 별도 저장소로 존속, Windows x64·macOS arm64 바이너리 제공, Python AST 지원. 기존 플러그인 환경에서 이 바이너리는 한 번도 설치된 적 없음(`~/.agent-sh/bin` 부재) → 정밀 분석은 지금까지 실제로 돌지 않았음.
+
+- [x] 1. 로컬 스킬 `~/.claude/skills/sync-docs/SKILL.md` 신규(이름 유지). 1차 증거: git diff 범위 + Grep(문서 속 경로·명령·심볼·버전 대조, 삭제/개명 export 추적, CHANGELOG 미기재 feat/fix). 판단 규칙·출력 블록은 업스트림 SKILL.md(MIT) 구조 차용·출처 고지.
+- [-] 2. (제외 — 사용자 결정, 로컬 스킬 고도화로 이월) 정밀 분석 단계(선택적): `agent-analyzer`가 PATH 또는 `~/.agent-sh/bin`에 있으면 `repo-intel init|update` → `query stale-docs`·`doc-drift`·`entry-points` 결과를 LOW certainty 리드로 병합. 없으면 `analyzer.available:false` + 사유로 축소 실행(오류 아님). 맵 위치는 `.git/` 밖 무추적 경로(예: `.claude/state/repo-intel.json`, gitignore 확인).
+- [-] 3. (제외) 바이너리 설치(사용자 승인 후, Windows): GitHub release v0.8.1 `x86_64-pc-windows-msvc.zip` + `.sha256` 대조 → `~/.agent-sh/bin/`. Mac은 `aarch64-apple-darwin` 별도 설치(동기화 대상 아님).
+- [x] 4. 플러그인 정리(Win 완료, Mac 대기): `claude plugin uninstall sync-docs@agentsys`(Win; Mac 별도), `settings.json` `"sync-docs@agentsys": true` 제거, `Skill(sync-docs)` 유지.
+- [x] 5. 참조 갱신 `sync-docs:sync-docs` → `sync-docs`: `SKILL_ROUTING.md:25,35`, `SKILL_ROUTING_DETAIL.md`(§ Documentation·Drift + Deprecated 이력 행), `gi-harness-bootstrap` templates/CLAUDE.md·README.md·references/team-sharing.md, 이 저장소 `CLAUDE.md:27`, `D:\JWS\AIAgent\todo\CLAUDE.md`.
+- [x] 6. 검증: 이 저장소에서 `/sync-docs report --scope=recent` 실행(분석기 유/무 두 경로), dotfiles·프로젝트 커밋(push는 별도 승인).
+
+### Review
+- 로컬 스킬 `report --scope=recent` 실행: origin/main 기준 HEAD~5..HEAD(5커밋, 문서·.gitignore만) — Issues 0, CHANGELOG OK(feat/fix 없음), 저장소 내 `sync-docs:` 잔존 참조 0. 분석기 경로는 범위 제외.
+- settings.json 편집 시 CRLF 작업본에서 LF 앵커 정규식이 이중 CR(CR CR LF)을 남겨 git이 파일 전체를 -text로 판정 → 이중 CR 제거로 1줄 diff 복구.
