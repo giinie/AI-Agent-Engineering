@@ -6,7 +6,7 @@
 
 ## Planning
 - Enter plan mode for **cross-file changes or architectural decisions** — not every multi-step task
-- Write the plan to `tasks/todo.md` with checkable items before implementing
+- Write the plan to `tasks/todo.md` § In progress with checkable items before implementing
 - Check official documentation for platform-feature limits (Team, Agent, MCP, etc.) before designing around them — experimental features change most. Use `context7` MCP for SDK/framework docs (per `~/.claude/MCP_ROUTING.md` §3 Tie-Breaking).
 - Check in with the user before implementing a plan that meets the plan-mode trigger above (cross-file or architectural)
 - If execution goes sideways, stop and re-plan rather than pushing forward
@@ -70,8 +70,16 @@ verify-and-close duties: invoke the **`external-engine-handoff` skill**
 delegating any story to codex/amp.
 
 ## Task Execution
-- Track progress by marking items complete in `tasks/todo.md` as you go
-- Add a review section to `tasks/todo.md` when the task is complete
+- `tasks/todo.md` holds only § In progress (the current plan) and § Backlog (open
+  items, each with an owner and its origin). Closed sections move to
+  `tasks/todo-archive.md` — append-only, never edited
+- Tick items **on their original line** as you go — never record completion as a new
+  line in another section
+- When later work resolves an older item (backlog or archive), close that item in
+  place with `→ resolved: <section/commit>`
+- When the task is complete: add a review note, move unfinished items to § Backlog,
+  then append the closed section to `tasks/todo-archive.md` and delete it here
+- Before opening a new section, sweep § Backlog and drop items already resolved
 
 ## Verification
 - Verify with the repo's real checks — `uv run pytest tests/ -q` and the other commands in `AGENTS.md` § Common Commands — and report their actual output

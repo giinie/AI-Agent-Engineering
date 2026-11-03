@@ -30,4 +30,4 @@ Inherits skill routing from `~/.claude/SKILL_ROUTING.md` and MCP catalog from `~
 
 - `WORKFLOW_ORCHESTRATION.md` — auto-loaded via the `### Rules` import.
 - `tasks/lessons.md` — read at session start; apply non-obvious project patterns recorded there.
-- `tasks/todo.md` — append checkable plan items here for cross-file or architectural changes before implementing.
+- `tasks/todo.md` — current plan (§ In progress) + open § Backlog only, per `WORKFLOW_ORCHESTRATION.md` § Task Execution. Closed sections live in `tasks/todo-archive.md`.
