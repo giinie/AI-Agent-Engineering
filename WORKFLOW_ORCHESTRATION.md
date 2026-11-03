@@ -78,7 +78,7 @@ delegating any story to codex/amp.
 - When later work resolves a § Backlog item, close it in place with
   `→ resolved: <section/commit>`
 - When the task is complete: add a review note, move unfinished items to § Backlog,
-  then append the closed section to `tasks/todo-archive.md` and delete it here
+  mark items dropped by decision `[-]`, then append the closed section to `tasks/todo-archive.md` and delete it here
 - Before opening a new section, sweep § Backlog and drop items already resolved, and
   grep `tasks/todo-archive.md` for prior work or declined (`[-]`) items on the same topic
 
