@@ -75,11 +75,12 @@ delegating any story to codex/amp.
   `tasks/todo-archive.md` — append-only, never edited
 - Tick items **on their original line** as you go — never record completion as a new
   line in another section
-- When later work resolves an older item (backlog or archive), close that item in
-  place with `→ resolved: <section/commit>`
+- When later work resolves a § Backlog item, close it in place with
+  `→ resolved: <section/commit>`
 - When the task is complete: add a review note, move unfinished items to § Backlog,
   then append the closed section to `tasks/todo-archive.md` and delete it here
-- Before opening a new section, sweep § Backlog and drop items already resolved
+- Before opening a new section, sweep § Backlog and drop items already resolved, and
+  grep `tasks/todo-archive.md` for prior work or declined (`[-]`) items on the same topic
 
 ## Verification
 - Verify with the repo's real checks — `uv run pytest tests/ -q` and the other commands in `AGENTS.md` § Common Commands — and report their actual output
