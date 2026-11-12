@@ -49,7 +49,8 @@ config / instruction docs:
 - Spawn subagents **only when context isolation is explicitly needed**:
   - Parallel independent analysis (e.g., reviewing multiple modules simultaneously)
   - Research/exploration that would pollute the main context window
-  - Adversarial review — **security-sensitive changes only**, meaning the triggers listed under Skill Policy in `CLAUDE.md`, where review is already MANDATORY (that list lives there, not here): one subagent implements, a separate reviewer subagent critiques. Outside that carve-out, do NOT use a subagent to verify or double-check your own work — see § Verification
+  - Adversarial review — **security-sensitive changes only**, meaning the triggers listed under Skill Policy in `CLAUDE.md`, where review is already MANDATORY (that list lives there, not here): one subagent implements, a separate reviewer subagent critiques. Outside that carve-out and the gi-forge one below, do NOT use a subagent to verify or double-check your own work — see § Verification
+  - gi-forge chain-artifact validation — the `artifact-validator` agent judging a PRD / architecture / epics / story file against its checklist in a fresh context, as the `gi-forge` skill prescribes
 - One focused task per subagent — never multiplex unrelated concerns in a single subagent
 - Do NOT spawn subagents for simple sequential tasks; keep the main context clean instead
 - Prefer 2–3 targeted subagents over large swarms — you cannot effectively observe 10+ agents
@@ -84,7 +85,7 @@ delegating any story to codex/amp.
 
 ## Verification
 - Verify with the repo's real checks — `uv run pytest tests/ -q` and the other commands in `AGENTS.md` § Common Commands — and report their actual output
-- For a long-running or unattended task, set the completion check as a `/goal` condition instead of only asserting it at the end — a separate evaluator re-checks it after every turn (`/best-practices` § "Give Claude a way to verify its work", the *across a session* lever). The Stop-hook lever from that same list is deliberately NOT used in this repo: a repo-wide `pytest` gate breaks on the `ch07` collection gotcha, so hook-based automation stays ruff-only (see `tasks/lessons.md`)
+- For a long-running or unattended task, set the completion check as a `/goal` condition instead of only asserting it at the end — a separate evaluator re-checks it after every turn (`/best-practices` § "Give Claude a check to run", the *As a goal* option). The Stop-hook lever from that same list is deliberately NOT used in this repo: a repo-wide `pytest` gate breaks on the `ch07` collection gotcha, so hook-based automation stays ruff-only (see `tasks/lessons.md`)
 - Do NOT layer a reflexive self-review or verifier pass on top of that for routine work: the models this harness runs verify their own work unprompted. Which models that covers, and how to identify the active one, lives in `~/.claude/CLAUDE.md` § Model Alignment — re-evaluate this rule when that section flags a model outside its list. Real verification — actually running the tests/commands and reporting the results — is unaffected.
 
 ## Bug Fixing
