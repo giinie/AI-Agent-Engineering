@@ -54,7 +54,7 @@ config / instruction docs:
 - One focused task per subagent — never multiplex unrelated concerns in a single subagent
 - Do NOT spawn subagents for simple sequential tasks; keep the main context clean instead
 - Prefer 2–3 targeted subagents over large swarms — you cannot effectively observe 10+ agents
-- **Targeted search → direct tools first**: For known file paths, specific patterns, or directory exploration, use Glob/Grep/Read directly. Explore subagents are for broad, open-ended codebase questions only.
+- **Targeted search → direct tools first**: For known file paths, specific patterns, or directory exploration, use direct search (Glob/Grep tools on Windows; Bash `find`/`grep` on macOS/Linux, where those tools are absent by default) and Read. Explore subagents are for broad, open-ended codebase questions only.
 
 ## External-Engine Implementation Handoff
 
