@@ -12,7 +12,7 @@
 - If execution goes sideways, stop and re-plan rather than pushing forward
 - When the session is in "work without stopping for clarifying questions" mode (set via system reminder or explicit user instruction):
   - Record the assumption inline in the response, then proceed
-  - **Irreversible actions still require explicit confirmation**: DB schema migrations, destructive shell commands (`rm -rf`, `git reset --hard`, `git push --force`), production/staging deploys, secret/credential changes, and outbound calls that change something outside this machine — sending a message or email; creating, updating or deleting an issue, PR, page or record through an API or MCP; publishing a package. Read-only fetches and retries of calls that are safe to repeat are not covered
+  - **Irreversible actions still require explicit confirmation**: DB schema migrations, destructive shell commands (`rm -rf`, `git reset --hard`, `git push --force`), production/staging deploys, secret/credential changes, and outbound calls that change something outside this machine. That covers any such call, including: sending a message or email; creating, updating or deleting an issue, PR, page or record through an API or MCP; publishing a package; triggering a remote job, CI run or webhook; changing a cloud resource or its configuration; creating a scheduled task. Read-only fetches and retries of calls that are safe to repeat are not covered
 
 ## Recall Before Proposing (Audit / Review Gate)
 
