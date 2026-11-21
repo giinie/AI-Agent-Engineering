@@ -42,7 +42,7 @@ cd src/common/observability && docker-compose up -d
 ### Environment
 
 - Python is **pinned to 3.12** (`>=3.12,<3.13` in `pyproject.toml`; venv runs CPython 3.12.11). Do not assume 3.13+ syntax/stdlib.
-- `.env` is required at the repo root with `OPENAI_API_KEY` (template: `.env.example`) — read by the 28 example scripts that call `load_dotenv()` themselves. Nothing loads it for you, so the test suite is NOT covered by it (see Project-Specific Gotchas). Some examples additionally need `WOLFRAM_ALPHA_APP_ID`, `YOUR_SLACK_BOT_TOKEN`, or `TRACELOOP_API_KEY`. The `LANGCHAIN_*` block in `.env.example` is optional LangSmith tracing, off by default (`LANGCHAIN_TRACING_V2=false`) and read by no example — `langsmith` is only a transitive dependency.
+- `.env` is required at the repo root with `OPENAI_API_KEY` (template: `.env.example`) — read by the 28 example scripts that call `load_dotenv()` themselves. Nothing loads it for you, so the test suite is NOT covered by it (see Project-Specific Gotchas). Some examples additionally need `WOLFRAM_ALPHA_APP_ID`, `SLACK_BOT_TOKEN`, or `TRACELOOP_API_KEY` — `.env.example` spells the Slack one `YOUR_SLACK_BOT_TOKEN`, a name no code reads (`src/frameworks/langchain/` reads `SLACK_BOT_TOKEN`; the `ch05/` scripts hardcode a placeholder string instead). The `LANGCHAIN_*` block in `.env.example` is optional LangSmith tracing, off by default (`LANGCHAIN_TRACING_V2=false`) and read by no example — `langsmith` is only a transitive dependency.
 - WSL is recommended on Windows because some dependencies don't work on native Win32.
 
 ## Architecture — Big Picture
